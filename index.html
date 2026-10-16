@@ -63,14 +63,14 @@
             <div class="amount"><span data-price="month">699</span> ₽</div>
             <div class="per">699 ₽ в месяц</div>
             <ul><li>без ограничений по числу приложений</li><li>до 2 устройств на один код</li></ul>
-            <button class="btn" id="buyMonth">Купить</button>
+            <button class="btn ghost" id="buyMonth">Купить</button>
           </div>
           <div class="card price">
             <h3>6 месяцев</h3>
             <div class="amount"><span data-price="half">3350</span> ₽</div>
             <div class="per"><span data-per="half">558</span> ₽ в месяц · <b>−<span data-off="half">20</span>%</b></div>
             <ul><li>всё из месячного тарифа</li><li>скидка 20% от месячной цены</li></ul>
-            <button class="btn" id="buyHalf">Купить</button>
+            <button class="btn ghost" id="buyHalf">Купить</button>
           </div>
           <div class="card price best">
             <span class="badge">Выгоднее всего</span>
@@ -81,18 +81,21 @@
             <button class="btn" id="buyYear">Купить</button>
           </div>
         </div>
+        <p class="notice" id="refNote" hidden style="margin-bottom:18px;text-align:center"></p>
         <div class="extend" style="margin-bottom:22px">
-          <p>E-mail для кассового чека:</p>
+          <p>E-mail для чека и кода лицензии:</p>
           <input id="email" type="email" placeholder="you@example.com" autocomplete="email" spellcheck="false">
-          <p style="font-size:14px;margin:10px 0 0"><label><input type="checkbox" id="consent"> Я согласен на передачу моего адреса e-mail в ЮKassa для отправки чека и принимаю <a href="privacy.html" target="_blank">политику конфиденциальности</a> и <a href="offer.html" target="_blank">оферту</a></label></p>
+          <p style="font-size:14px;margin:10px 0 0"><label><input type="checkbox" id="consent"> Я согласен на передачу моего адреса e-mail в ЮKassa для отправки чека и на получение на него кода лицензии и принимаю <a href="privacy.html" target="_blank">политику конфиденциальности</a> и <a href="offer.html" target="_blank">оферту</a></label></p>
         </div>
         <div class="extend">
           <p>Уже есть лицензия? Продлите её: введите код и выберите тариф выше.</p>
           <input id="extendCode" placeholder="MA-XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" spellcheck="false">
         </div>
         <div class="msg" id="buyMsg"></div>
+        <p class="notice" style="text-align:center">Приведите друга: за каждого, кто оплатит лицензию по вашей ссылке, вы получите +<span id="refInv">7</span> дней, а друг — +<span id="refFr">7</span> дней.
+          Свою ссылку и счётчик смотрите на странице <a href="bonus.html">«Мои бонусы»</a>.</p>
         <p class="notice">Оплата проходит на защищённой странице ЮKassa. После оплаты вы получите код лицензии на экране: сохраните его.
-          Данные банковской карты мы не получаем. E-mail нужен только для отправки кассового чека: мы пересылаем его в ЮKassa и не сохраняем.</p>
+          Данные банковской карты мы не получаем. E-mail нужен для кассового чека и для письма с кодом лицензии; он хранится у ЮKassa вместе с платежом, а мы его у себя не сохраняем.</p>
       </div>
     </section>
 
@@ -159,6 +162,8 @@
         var set = function (attr, value) { document.querySelectorAll("[data-" + attr + "=\"" + plan + "\"]").forEach(function (el) { el.textContent = value; }); };
         set("price", total); set("per", per); set("off", off);
       });
+      document.getElementById("refInv").textContent = cfg.referral.inviterDays;
+      document.getElementById("refFr").textContent = cfg.referral.friendDays;
       document.getElementById('mail').href = 'mailto:' + cfg.supportEmail;
       var m2 = document.getElementById("mail2"); m2.href = "mailto:" + cfg.supportEmail; m2.textContent = cfg.supportEmail;
 
@@ -166,6 +171,19 @@
       win.href = cfg.downloadWindows;
       var mac = document.getElementById('dlMac');
       if (cfg.downloadMac) { mac.href = cfg.downloadMac; mac.textContent = 'Скачать для macOS'; mac.classList.remove('disabled'); }
+
+      // Реферальная ссылка вида ...?ref=КОД: код запоминается на время визита (только в этом браузере):
+      var refCode = "";
+      try {
+        var fromUrl = (new URLSearchParams(window.location.search).get("ref") || "").toUpperCase().replace(/[^A-Z2-9]/g, "");
+        if (/^[A-Z2-9]{8}$/.test(fromUrl)) { refCode = fromUrl; sessionStorage.setItem("my_app_ref", fromUrl); }
+        else { var saved = sessionStorage.getItem("my_app_ref") || ""; if (/^[A-Z2-9]{8}$/.test(saved)) refCode = saved; }
+      } catch (e) {}
+      if (refCode) {
+        var note = document.getElementById("refNote");
+        note.textContent = "Вы пришли по приглашению друга: при первой покупке получите +" + cfg.referral.friendDays + " дней в подарок.";
+        note.hidden = false;
+      }
 
       var msg = document.getElementById('buyMsg');
       function say(text, error) { msg.textContent = text; msg.className = 'msg' + (error ? ' error' : ''); }
@@ -177,6 +195,7 @@
         if (!document.getElementById("consent").checked) { say("Подтвердите согласие с офертой и политикой конфиденциальности.", true); return; }
         var body = { action: "create", plan: plan, email: email };
         if (extend) body.extend_code = extend;
+        else if (refCode) body.ref = refCode;
         button.disabled = true;
         say('Создаём платёж…');
         fetch(cfg.payUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })

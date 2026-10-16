@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Мои бонусы: My_App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top"><div class="wrap"><a class="logo" href="index.html"><span class="mark">⬇</span> My_App</a></div></header>
+  <main class="wrap">
+    <div class="card center-card">
+      <h2 style="margin:0 0 8px">Мои бонусы</h2>
+      <p>Введите код вашей лицензии: покажем ссылку для друзей и сколько бонусных дней вы получили.</p>
+      <p class="extend" style="margin-top:14px"><input id="code" placeholder="MA-XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" spellcheck="false"></p>
+      <p><button class="btn" id="go">Показать</button></p>
+      <div class="msg" id="msg"></div>
+      <div id="result" hidden>
+        <p>Ваша ссылка для друзей:</p>
+        <div class="code" id="link" style="font-size:15px"></div>
+        <p><button class="btn" id="copy">Скопировать ссылку</button></p>
+        <p id="stats" class="notice"></p>
+      </div>
+      <p class="notice" style="margin-top:16px">Дни начисляются, когда друг впервые оплатит лицензию по вашей ссылке. Покупка для самого себя, возвраты и отозванные лицензии бонусов не дают.
+        Предел бонусов — <span id="cap">90</span> дней на одну лицензию. Подробнее в <a href="offer.html">оферте</a>.</p>
+      <p><a href="index.html">На главную</a></p>
+    </div>
+  </main>
+  <footer><div class="wrap">
+      <p>ИП Злобина Татьяна Евгеньевна · ИНН 860414423064 · ОГРНИП 325861700014187 · <a href="mailto:my_app@internet.ru">my_app@internet.ru</a></p><a href="index.html">На главную</a></div></footer>
+  <script src="config.js"></script>
+  <script>
+    (function () {
+      var cfg = window.MY_APP;
+      var $ = function (id) { return document.getElementById(id); };
+      $("cap").textContent = cfg.referral.capDays;
+      function say(t, err) { $("msg").textContent = t; $("msg").className = "msg" + (err ? " error" : ""); }
+
+      $("go").addEventListener("click", function () {
+        var code = $("code").value.toUpperCase().replace(/\s+/g, "");
+        if (!/^MA-[A-Z0-9]{5}(-[A-Z0-9]{5}){3}$/.test(code)) { say("Проверьте код: он выглядит как MA-XXXXX-XXXXX-XXXXX-XXXXX.", true); return; }
+        $("go").disabled = true; say("Загружаем…"); $("result").hidden = true;
+        fetch(cfg.licenseUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "referral", code: code }) })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+          .then(function (res) {
+            $("go").disabled = false;
+            if (!res.ok) {
+              var map = { invalid_code: "Такой код не найден.", revoked: "Лицензия отозвана: бонусы недоступны.", bad_request: "Неверный формат кода." };
+              say(map[res.data && res.data.error] || "Не удалось получить данные. Попробуйте позже.", true);
+              return;
+            }
+            var d = res.data, base = window.location.href.replace(/bonus\.html.*$/, "");
+            $("link").textContent = base + "?ref=" + d.ref_code + "#pricing";
+            $("stats").textContent = "Друзей оплатили: " + d.invited + ". Бонусных дней получено: " + d.bonus_days + " из " + d.bonus_cap + ". Лицензия действует до " + d.expires + ".";
+            $("result").hidden = false; say("");
+          })
+          .catch(function () { $("go").disabled = false; say("Нет связи с сервером. Проверьте интернет.", true); });
+      });
+
+      $("copy").addEventListener("click", function () {
+        var text = $("link").textContent;
+        if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { say("Ссылка скопирована."); });
+      });
+    })();
+  </script>
+</body>
+</html>
