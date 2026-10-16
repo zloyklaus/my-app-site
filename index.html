@@ -111,6 +111,17 @@
           «Windows защитила ваш компьютер»: нажмите «Подробнее» → «Выполнить в любом случае».</p>
       </div>
     </section>
+    <section id="terms">
+      <div class="wrap">
+        <h2>Оплата, получение и возврат</h2>
+        <div class="grid">
+          <div class="card"><h3>Оплата</h3><p>Банковской картой или другими способами на странице ЮKassa. Цены указаны в рублях, НДС не облагается.</p></div>
+          <div class="card"><h3>Получение</h3><p>Цифровой товар. Код лицензии показывается на экране сразу после оплаты; программа скачивается по кнопке выше. Доставки нет.</p></div>
+          <div class="card"><h3>Возврат</h3><p>В течение 14 дней с момента оплаты, если код ещё не использован. Подробнее в <a href="offer.html">оферте</a>.</p></div>
+          <div class="card"><h3>Поддержка</h3><p>Пишите на <a id="mail2" href="#">адрес поддержки</a>: поможем с установкой, оплатой и лицензией.</p></div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -131,6 +142,7 @@
       document.getElementById('priceMonth').innerHTML = cfg.priceMonth + ' ₽ <span>/ мес</span>';
       document.getElementById('priceYear').innerHTML = cfg.priceYear + ' ₽ <span>/ год</span>';
       document.getElementById('mail').href = 'mailto:' + cfg.supportEmail;
+      var m2 = document.getElementById("mail2"); m2.href = "mailto:" + cfg.supportEmail; m2.textContent = cfg.supportEmail;
 
       var win = document.getElementById('dlWin');
       win.href = cfg.downloadWindows;
