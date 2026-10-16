@@ -26,7 +26,7 @@
         <h1>Приложения из вашего Apple ID —<br>в IPA и сразу на устройство</h1>
         <p class="lead">Скачивайте нужные версии приложений, храните IPA у себя и устанавливайте на iPhone и iPad в несколько кликов.</p>
         <div class="actions">
-          <a class="btn" href="#download">Скачать для Windows</a>
+          <a class="btn" id="dlWinTop" href="#download">Скачать для Windows</a>
           <a class="btn ghost" href="#pricing">Тарифы</a>
         </div>
         <small>Первое приложение можно скачать бесплатно, без регистрации.</small>
@@ -148,10 +148,13 @@
     </div>
   </footer>
 
-  <script src="config.js"></script>
+  <script src="config.js?v=20261016b"></script>
   <script>
     (function () {
       var cfg = window.MY_APP;
+      var ref = cfg.referral || { inviterDays: 7, friendDays: 7, capDays: 90 };
+      var winLink = document.getElementById('dlWin'), winTop = document.getElementById('dlWinTop');
+      if (cfg.downloadWindows) { winLink.href = cfg.downloadWindows; winTop.href = cfg.downloadWindows; }
       document.getElementById('ver').textContent = cfg.version;
       var base = cfg.prices.month;
       Object.keys(cfg.prices).forEach(function (plan) {
@@ -162,8 +165,8 @@
         var set = function (attr, value) { document.querySelectorAll("[data-" + attr + "=\"" + plan + "\"]").forEach(function (el) { el.textContent = value; }); };
         set("price", total); set("per", per); set("off", off);
       });
-      document.getElementById("refInv").textContent = cfg.referral.inviterDays;
-      document.getElementById("refFr").textContent = cfg.referral.friendDays;
+      document.getElementById("refInv").textContent = ref.inviterDays;
+      document.getElementById("refFr").textContent = ref.friendDays;
       document.getElementById('mail').href = 'mailto:' + cfg.supportEmail;
       var m2 = document.getElementById("mail2"); m2.href = "mailto:" + cfg.supportEmail; m2.textContent = cfg.supportEmail;
 
@@ -181,7 +184,7 @@
       } catch (e) {}
       if (refCode) {
         var note = document.getElementById("refNote");
-        note.textContent = "Вы пришли по приглашению друга: при первой покупке получите +" + cfg.referral.friendDays + " дней в подарок.";
+        note.textContent = "Вы пришли по приглашению друга: при первой покупке получите +" + ref.friendDays + " дней в подарок.";
         note.hidden = false;
       }
 
