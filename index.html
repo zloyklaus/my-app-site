@@ -143,7 +143,7 @@
       function buy(plan, button) {
         var extend = document.getElementById('extendCode').value.trim();
         var email = document.getElementById("email").value.trim();
-        if (!/^[^s@]+@[^s@]+.[^s@]{2,}$/.test(email)) { say("Укажите e-mail для кассового чека.", true); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { say("Укажите e-mail для кассового чека.", true); return; }
         if (!document.getElementById("consent").checked) { say("Подтвердите согласие с офертой и политикой конфиденциальности.", true); return; }
         var body = { action: "create", plan: plan, email: email };
         if (extend) body.extend_code = extend;
