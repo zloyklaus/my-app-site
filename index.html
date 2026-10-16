@@ -49,25 +49,42 @@
     <section id="pricing">
       <div class="wrap">
         <h2>Тарифы</h2>
-        <div class="grid">
+        <div class="grid plans">
           <div class="card price">
             <h3>Пробный режим</h3>
             <div class="amount">0 ₽</div>
-            <ul><li>одно приложение бесплатно</li><li>без регистрации</li><li>все возможности программы</li></ul>
+            <div class="per">&nbsp;</div>
+            <ul><li>одно приложение бесплатно</li><li>без регистрации</li><li>все возможности</li></ul>
             <a class="btn ghost" href="#download">Скачать</a>
           </div>
           <div class="card price">
-            <h3>Месяц</h3>
-            <div class="amount" id="priceMonth">699 ₽ <span>/ мес</span></div>
-            <ul><li>без ограничений по числу приложений</li><li>до 2 устройств на один код</li><li>продление в любой момент</li></ul>
-            <button class="btn" id="buyMonth">Купить на месяц</button>
+            <h3>1 месяц</h3>
+            <div class="amount"><span data-price="month">699</span> ₽</div>
+            <div class="per">699 ₽ в месяц</div>
+            <ul><li>без ограничений по числу приложений</li><li>до 2 устройств на один код</li></ul>
+            <button class="btn" id="buyMonth">Купить</button>
+          </div>
+          <div class="card price">
+            <h3>3 месяца</h3>
+            <div class="amount"><span data-price="quarter">1890</span> ₽</div>
+            <div class="per"><span data-per="quarter">630</span> ₽ в месяц · <b>−<span data-off="quarter">10</span>%</b></div>
+            <ul><li>всё из месячного тарифа</li><li>дешевле, чем платить помесячно</li></ul>
+            <button class="btn" id="buyQuarter">Купить</button>
+          </div>
+          <div class="card price">
+            <h3>6 месяцев</h3>
+            <div class="amount"><span data-price="half">3350</span> ₽</div>
+            <div class="per"><span data-per="half">558</span> ₽ в месяц · <b>−<span data-off="half">20</span>%</b></div>
+            <ul><li>всё из месячного тарифа</li><li>скидка 20% от месячной цены</li></ul>
+            <button class="btn" id="buyHalf">Купить</button>
           </div>
           <div class="card price best">
-            <span class="badge">Выгоднее</span>
-            <h3>Год</h3>
-            <div class="amount" id="priceYear">2499 ₽ <span>/ год</span></div>
-            <ul><li>всё, что в месячном тарифе</li><li>экономия около 70% относительно месяца</li></ul>
-            <button class="btn" id="buyYear">Купить на год</button>
+            <span class="badge">Выгоднее всего</span>
+            <h3>1 год</h3>
+            <div class="amount"><span data-price="year">5890</span> ₽</div>
+            <div class="per"><span data-per="year">491</span> ₽ в месяц · <b>−<span data-off="year">30</span>%</b></div>
+            <ul><li>всё из месячного тарифа</li><li>максимальная скидка 30%</li></ul>
+            <button class="btn" id="buyYear">Купить</button>
           </div>
         </div>
         <div class="extend" style="margin-bottom:22px">
@@ -139,8 +156,15 @@
     (function () {
       var cfg = window.MY_APP;
       document.getElementById('ver').textContent = cfg.version;
-      document.getElementById('priceMonth').innerHTML = cfg.priceMonth + ' ₽ <span>/ мес</span>';
-      document.getElementById('priceYear').innerHTML = cfg.priceYear + ' ₽ <span>/ год</span>';
+      var base = cfg.prices.month;
+      Object.keys(cfg.prices).forEach(function (plan) {
+        var months = cfg.months[plan];
+        var total = cfg.prices[plan];
+        var per = Math.round(total / months);
+        var off = Math.round((1 - per / base) * 100);
+        var set = function (attr, value) { document.querySelectorAll("[data-" + attr + "=\"" + plan + "\"]").forEach(function (el) { el.textContent = value; }); };
+        set("price", total); set("per", per); set("off", off);
+      });
       document.getElementById('mail').href = 'mailto:' + cfg.supportEmail;
       var m2 = document.getElementById("mail2"); m2.href = "mailto:" + cfg.supportEmail; m2.textContent = cfg.supportEmail;
 
@@ -183,8 +207,9 @@
           .catch(function () { button.disabled = false; say('Нет связи с сервером. Проверьте интернет.', true); });
       }
 
-      document.getElementById('buyMonth').addEventListener('click', function () { buy('month', this); });
-      document.getElementById('buyYear').addEventListener('click', function () { buy('year', this); });
+      [["buyMonth", "month"], ["buyQuarter", "quarter"], ["buyHalf", "half"], ["buyYear", "year"]].forEach(function (pair) {
+        document.getElementById(pair[0]).addEventListener("click", function () { buy(pair[1], this); });
+      });
     })();
   </script>
 </body>

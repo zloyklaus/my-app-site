@@ -8,8 +8,9 @@ window.MY_APP = {
   downloadMac: "", // пока пусто: кнопка для macOS отключена
 
   version: "2.0.0",
-  priceMonth: 699,
-  priceYear: 2499,
+  // Цены в рублях и срок в месяцах (должны совпадать с ценами в функции pay)
+  prices: { month: 699, quarter: 1890, half: 3350, year: 5890 },
+  months: { month: 1, quarter: 3, half: 6, year: 12 },
 
   // Контакты для поддержки (заполните)
   supportEmail: "my_app@internet.ru"

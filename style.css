@@ -115,3 +115,8 @@ footer a { color: var(--muted); }
 .doc h1 { font-size: 30px; }
 .doc h2 { font-size: 20px; text-align: left; margin: 26px 0 8px; }
 .doc .fill { background: #fff3cd; color: #664d03; border-radius: 4px; padding: 0 4px; }
+
+.grid.plans { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.price .per { color: var(--muted); font-size: 14px; margin: -2px 0 6px; min-height: 22px; }
+.price .per b { color: var(--ok); }
+.price .amount { font-size: 32px; }
