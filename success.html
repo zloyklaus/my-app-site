@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Оплата: My_App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap"><a class="logo" href="index.html"><span class="mark">⬇</span> My_App</a></div>
+  </header>
+
+  <main class="wrap">
+    <div class="card center-card" id="box">
+      <div class="spinner" id="spin"></div>
+      <h2 id="title" style="margin:0 0 8px">Проверяем оплату…</h2>
+      <p id="text" style="color:var(--muted)">Это занимает несколько секунд. Не закрывайте страницу.</p>
+      <div id="result" hidden>
+        <div class="code" id="code"></div>
+        <p><button class="btn" id="copy">Скопировать код</button></p>
+        <p class="notice">Сохраните код: в целях защиты данных мы не храним вашу почту и не сможем прислать его повторно.
+          Адрес этой страницы тоже сохраняет код: можно вернуться по ссылке из браузера.
+          Код вводится в программе: кнопка «Лицензия» → вставьте код → «Активировать».</p>
+      </div>
+      <p><a href="index.html">На главную</a></p>
+    </div>
+  </main>
+
+  <script src="config.js"></script>
+  <script>
+    (function () {
+      var cfg = window.MY_APP;
+      var params = new URLSearchParams(location.search);
+      var id = params.get('id');
+      try { if (!id) id = localStorage.getItem('my_app_last_payment'); } catch (e) {}
+
+      var title = document.getElementById('title');
+      var text = document.getElementById('text');
+      var spin = document.getElementById('spin');
+      var result = document.getElementById('result');
+      var codeEl = document.getElementById('code');
+
+      function fail(t, d) { spin.hidden = true; title.textContent = t; text.textContent = d; }
+
+      if (!id) { fail('Платёж не найден', 'Откройте ссылку из письма ЮKassa или вернитесь на главную и оформите оплату.'); return; }
+
+      document.getElementById('copy').addEventListener('click', function () {
+        var self = this;
+        navigator.clipboard.writeText(codeEl.textContent).then(function () { self.textContent = 'Скопировано'; });
+      });
+
+      var started = Date.now();
+      function poll() {
+        fetch(cfg.payUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'status', id: id }) })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (d.status === 'succeeded' && d.code) {
+              spin.hidden = true;
+              title.textContent = d.renewed ? 'Лицензия продлена' : 'Оплата прошла';
+              text.textContent = 'Тариф: ' + (d.plan === 'year' ? 'год' : 'месяц') + (d.expires ? ', действует до ' + d.expires.split('-').reverse().join('.') : '') + '.';
+              codeEl.textContent = d.code;
+              result.hidden = false;
+              return;
+            }
+            if (d.status === 'canceled') { fail('Платёж отменён', 'Оплата не прошла. Вы можете попробовать ещё раз на главной странице.'); return; }
+            if (d.error === 'not_found') { fail('Платёж не найден', 'Проверьте ссылку или вернитесь на главную.'); return; }
+            if (Date.now() - started > 15 * 60 * 1000) { fail('Оплата не подтверждена', 'Если деньги списаны, обновите страницу через несколько минут или напишите в поддержку, указав номер платежа: ' + id); return; }
+            setTimeout(poll, 3000);
+          })
+          .catch(function () { setTimeout(poll, 5000); });
+      }
+      poll();
+    })();
+  </script>
+</body>
+</html>

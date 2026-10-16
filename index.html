@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My_App: загрузка и установка приложений из вашего Apple ID</title>
+  <meta name="description" content="My_App скачивает IPA приложений из вашего Apple ID, умеет выбирать версии и устанавливает их на iPhone и iPad. Программа для Windows и macOS.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="logo" href="#"><span class="mark">⬇</span> My_App</a>
+      <nav>
+        <a href="#features">Возможности</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#download">Скачать</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1>Приложения из вашего Apple ID —<br>в IPA и сразу на устройство</h1>
+        <p class="lead">Скачивайте нужные версии приложений, храните IPA у себя и устанавливайте на iPhone и iPad в несколько кликов.</p>
+        <div class="actions">
+          <a class="btn" href="#download">Скачать для Windows</a>
+          <a class="btn ghost" href="#pricing">Тарифы</a>
+        </div>
+        <small>Первое приложение можно скачать бесплатно, без регистрации.</small>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="wrap">
+        <h2>Что умеет My_App</h2>
+        <div class="grid">
+          <div class="card"><h3>Нужная версия</h3><p>Выбирайте любую доступную версию приложения, а не только последнюю.</p></div>
+          <div class="card"><h3>Быстрый поиск</h3><p>Находит приложения и по русскому, и по английскому названию: «вк» и «vk» — одно и то же.</p></div>
+          <div class="card"><h3>Установка на устройство</h3><p>Подключили iPhone или iPad по USB — отметили приложения — готово. Показывает модель устройства.</p></div>
+          <div class="card"><h3>Несколько приложений сразу</h3><p>Отметьте любое количество приложений, программа скачает их по очереди и покажет результат.</p></div>
+          <div class="card"><h3>Понятные причины</h3><p>Если приложение не скачалось, программа объяснит почему: платное, недоступно в вашей стране, истекла сессия.</p></div>
+          <div class="card"><h3>Ваши данные у вас</h3><p>Пароль не сохраняется, вход можно снять одной кнопкой или автоматически при закрытии окна.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <div class="wrap">
+        <h2>Тарифы</h2>
+        <div class="grid">
+          <div class="card price">
+            <h3>Пробный режим</h3>
+            <div class="amount">0 ₽</div>
+            <ul><li>одно приложение бесплатно</li><li>без регистрации</li><li>все возможности программы</li></ul>
+            <a class="btn ghost" href="#download">Скачать</a>
+          </div>
+          <div class="card price">
+            <h3>Месяц</h3>
+            <div class="amount" id="priceMonth">699 ₽ <span>/ мес</span></div>
+            <ul><li>без ограничений по числу приложений</li><li>до 2 устройств на один код</li><li>продление в любой момент</li></ul>
+            <button class="btn" id="buyMonth">Купить на месяц</button>
+          </div>
+          <div class="card price best">
+            <span class="badge">Выгоднее</span>
+            <h3>Год</h3>
+            <div class="amount" id="priceYear">2499 ₽ <span>/ год</span></div>
+            <ul><li>всё, что в месячном тарифе</li><li>экономия около 70% относительно месяца</li></ul>
+            <button class="btn" id="buyYear">Купить на год</button>
+          </div>
+        </div>
+        <div class="extend">
+          <p>Уже есть лицензия? Продлите её: введите код и выберите тариф выше.</p>
+          <input id="extendCode" placeholder="MA-XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="msg" id="buyMsg"></div>
+        <p class="notice">Оплата проходит на защищённой странице ЮKassa. После оплаты вы получите код лицензии на экране: сохраните его.
+          Данные банковской карты и e-mail для чека мы не получаем и не храним.</p>
+      </div>
+    </section>
+
+    <section id="download">
+      <div class="wrap">
+        <h2>Скачать</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Windows 10 / 11</h3>
+            <p>Установщик: выберите папку и при желании добавьте ярлык на рабочий стол.</p>
+            <p style="margin-top:14px"><a class="btn" id="dlWin" href="#">Скачать для Windows</a></p>
+          </div>
+          <div class="card">
+            <h3>macOS</h3>
+            <p>Консольная версия. Графическое окно для Mac в разработке.</p>
+            <p style="margin-top:14px"><a class="btn disabled" id="dlMac" href="#">Скоро</a></p>
+          </div>
+        </div>
+        <h2 style="margin-top:36px">Как начать</h2>
+        <ol class="steps">
+          <li>Скачайте и запустите установщик, выберите папку.</li>
+          <li>Откройте My_App и войдите в свой Apple ID (пароль нужен только для входа и не сохраняется).</li>
+          <li>Отметьте приложения и нажмите «Скачать»: первое — бесплатно.</li>
+          <li>Для продолжения оплатите тариф, введите код в окне «Лицензия» — и пользуйтесь без ограничений.</li>
+        </ol>
+        <p class="notice" style="margin-top:18px">Установщик пока не подписан цифровой подписью, поэтому Windows может показать предупреждение
+          «Windows защитила ваш компьютер»: нажмите «Подробнее» → «Выполнить в любом случае».</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>My_App <span id="ver"></span> · <a href="offer.html">Публичная оферта</a> · <a href="privacy.html">Политика конфиденциальности</a> ·
+        <a id="mail" href="#">Поддержка</a></p>
+      <p>Программа не связана с Apple Inc. Apple, Apple ID, App Store, iPhone и iPad — товарные знаки Apple Inc.
+        Программа получает только бесплатные приложения и работает с вашим собственным Apple ID.</p>
+    </div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script>
+    (function () {
+      var cfg = window.MY_APP;
+      document.getElementById('ver').textContent = cfg.version;
+      document.getElementById('priceMonth').innerHTML = cfg.priceMonth + ' ₽ <span>/ мес</span>';
+      document.getElementById('priceYear').innerHTML = cfg.priceYear + ' ₽ <span>/ год</span>';
+      document.getElementById('mail').href = 'mailto:' + cfg.supportEmail;
+
+      var win = document.getElementById('dlWin');
+      win.href = cfg.downloadWindows;
+      var mac = document.getElementById('dlMac');
+      if (cfg.downloadMac) { mac.href = cfg.downloadMac; mac.textContent = 'Скачать для macOS'; mac.classList.remove('disabled'); }
+
+      var msg = document.getElementById('buyMsg');
+      function say(text, error) { msg.textContent = text; msg.className = 'msg' + (error ? ' error' : ''); }
+
+      function buy(plan, button) {
+        var extend = document.getElementById('extendCode').value.trim();
+        var body = { action: 'create', plan: plan };
+        if (extend) body.extend_code = extend;
+        button.disabled = true;
+        say('Создаём платёж…');
+        fetch(cfg.payUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+          .then(function (res) {
+            button.disabled = false;
+            if (res.ok && res.data.confirmation_url) {
+              try { localStorage.setItem('my_app_last_payment', res.data.id); } catch (e) {}
+              window.location.href = res.data.confirmation_url;
+              return;
+            }
+            var err = (res.data && res.data.error) || 'unknown';
+            var texts = {
+              payments_not_configured: 'Оплата ещё не подключена. Напишите в поддержку.',
+              extend_code_not_found: 'Код для продления не найден. Проверьте его.',
+              bad_extend_code: 'Неверный формат кода для продления.',
+              provider_error: 'Платёжная система временно недоступна, попробуйте позже.'
+            };
+            say(texts[err] || 'Не удалось создать платёж. Попробуйте позже.', true);
+          })
+          .catch(function () { button.disabled = false; say('Нет связи с сервером. Проверьте интернет.', true); });
+      }
+
+      document.getElementById('buyMonth').addEventListener('click', function () { buy('month', this); });
+      document.getElementById('buyYear').addEventListener('click', function () { buy('year', this); });
+    })();
+  </script>
+</body>
+</html>
