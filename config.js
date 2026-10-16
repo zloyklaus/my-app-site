@@ -12,5 +12,5 @@ window.MY_APP = {
   priceYear: 2499,
 
   // Контакты для поддержки (заполните)
-  supportEmail: "support@example.com"
+  supportEmail: "my_app@internet.ru"
 };
