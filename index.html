@@ -65,13 +65,6 @@
             <button class="btn" id="buyMonth">Купить</button>
           </div>
           <div class="card price">
-            <h3>3 месяца</h3>
-            <div class="amount"><span data-price="quarter">1890</span> ₽</div>
-            <div class="per"><span data-per="quarter">630</span> ₽ в месяц · <b>−<span data-off="quarter">10</span>%</b></div>
-            <ul><li>всё из месячного тарифа</li><li>дешевле, чем платить помесячно</li></ul>
-            <button class="btn" id="buyQuarter">Купить</button>
-          </div>
-          <div class="card price">
             <h3>6 месяцев</h3>
             <div class="amount"><span data-price="half">3350</span> ₽</div>
             <div class="per"><span data-per="half">558</span> ₽ в месяц · <b>−<span data-off="half">20</span>%</b></div>
@@ -207,7 +200,7 @@
           .catch(function () { button.disabled = false; say('Нет связи с сервером. Проверьте интернет.', true); });
       }
 
-      [["buyMonth", "month"], ["buyQuarter", "quarter"], ["buyHalf", "half"], ["buyYear", "year"]].forEach(function (pair) {
+      [["buyMonth", "month"], ["buyHalf", "half"], ["buyYear", "year"]].forEach(function (pair) {
         document.getElementById(pair[0]).addEventListener("click", function () { buy(pair[1], this); });
       });
     })();
