@@ -70,13 +70,18 @@
             <button class="btn" id="buyYear">Купить на год</button>
           </div>
         </div>
+        <div class="extend" style="margin-bottom:22px">
+          <p>E-mail для кассового чека:</p>
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="email" spellcheck="false">
+          <p style="font-size:14px;margin:10px 0 0"><label><input type="checkbox" id="consent"> Я согласен на передачу моего адреса e-mail в ЮKassa для отправки чека и принимаю <a href="privacy.html" target="_blank">политику конфиденциальности</a> и <a href="offer.html" target="_blank">оферту</a></label></p>
+        </div>
         <div class="extend">
           <p>Уже есть лицензия? Продлите её: введите код и выберите тариф выше.</p>
           <input id="extendCode" placeholder="MA-XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" spellcheck="false">
         </div>
         <div class="msg" id="buyMsg"></div>
         <p class="notice">Оплата проходит на защищённой странице ЮKassa. После оплаты вы получите код лицензии на экране: сохраните его.
-          Данные банковской карты и e-mail для чека мы не получаем и не храним.</p>
+          Данные банковской карты мы не получаем. E-mail нужен только для отправки кассового чека: мы пересылаем его в ЮKassa и не сохраняем.</p>
       </div>
     </section>
 
@@ -110,6 +115,7 @@
 
   <footer>
     <div class="wrap">
+      <p>ИП Злобина Татьяна Евгеньевна · ИНН 860414423064 · ОГРНИП 325861700014187 · <a href="mailto:my_app@internet.ru">my_app@internet.ru</a></p>
       <p>My_App <span id="ver"></span> · <a href="offer.html">Публичная оферта</a> · <a href="privacy.html">Политика конфиденциальности</a> ·
         <a id="mail" href="#">Поддержка</a></p>
       <p>Программа не связана с Apple Inc. Apple, Apple ID, App Store, iPhone и iPad — товарные знаки Apple Inc.
@@ -136,7 +142,10 @@
 
       function buy(plan, button) {
         var extend = document.getElementById('extendCode').value.trim();
-        var body = { action: 'create', plan: plan };
+        var email = document.getElementById("email").value.trim();
+        if (!/^[^s@]+@[^s@]+.[^s@]{2,}$/.test(email)) { say("Укажите e-mail для кассового чека.", true); return; }
+        if (!document.getElementById("consent").checked) { say("Подтвердите согласие с офертой и политикой конфиденциальности.", true); return; }
+        var body = { action: "create", plan: plan, email: email };
         if (extend) body.extend_code = extend;
         button.disabled = true;
         say('Создаём платёж…');
@@ -153,6 +162,7 @@
             var texts = {
               payments_not_configured: 'Оплата ещё не подключена. Напишите в поддержку.',
               extend_code_not_found: 'Код для продления не найден. Проверьте его.',
+              bad_email: "Проверьте адрес e-mail.",
               bad_extend_code: 'Неверный формат кода для продления.',
               provider_error: 'Платёжная система временно недоступна, попробуйте позже.'
             };
