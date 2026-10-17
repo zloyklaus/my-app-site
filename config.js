@@ -10,10 +10,10 @@ window.MY_APP = {
   referral: { inviterDays: 7, friendDays: 7, capDays: 90 },
 
   // Ссылки на скачивание. Файлы загружаются в хранилище Supabase (бакет "downloads") или на ваш хостинг.
-  downloadWindows: "https://vhocmevgvinpfezwpaqc.supabase.co/storage/v1/object/public/downloads/My_App_Setup_2.0.0.exe",
+  downloadWindows: "https://github.com/zloyklaus/my-app-site/releases/download/v1.0.0/My_App_Setup_1.0.0.exe",
   downloadMac: "", // пока пусто: кнопка для macOS отключена
 
-  version: "2.0.0",
+  version: "1.0.0",
   // Цены в рублях и срок в месяцах (должны совпадать с ценами в функции pay)
   prices: { month: 699, half: 3350, year: 5890 },
   months: { month: 1, half: 6, year: 12 },
