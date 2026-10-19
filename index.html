@@ -141,8 +141,13 @@
           </div>
           <div class="card">
             <h3>macOS</h3>
-            <p>Консольная версия. Графическое окно для Mac в разработке.</p>
-            <p style="margin-top:14px"><a class="btn disabled" id="dlMac" href="#">Скоро</a></p>
+            <p>То же окно, что и в Windows. Утилиты для iPhone уже внутри программы.</p>
+            <p style="margin-top:14px">
+              <a class="btn" id="dlMacArm" href="#">Для Apple Silicon (M1 и новее)</a>
+              <a class="btn ghost" id="dlMacIntel" href="#">Для Intel</a>
+            </p>
+            <p style="margin-top:10px;font-size:13px;color:var(--muted)">Какой у вас Mac: меню Apple → «Об этом Mac». «Чип Apple M…» — Apple Silicon, «Процессор Intel…» — Intel.
+              Программа пока без подписи Apple: как открыть, написано в <a href="help.html#mac">помощи</a>.</p>
           </div>
         </div>
         <h2 style="margin-top:36px">Как начать</h2>
@@ -179,7 +184,7 @@
     </div>
   </footer>
 
-  <script src="config.js?v=20261019a"></script>
+  <script src="config.js?v=20261019b"></script>
   <script>
     (function () {
       var cfg = window.MY_APP;
@@ -226,8 +231,10 @@
 
       var win = document.getElementById('dlWin');
       win.href = cfg.downloadWindows;
-      var mac = document.getElementById('dlMac');
-      if (cfg.downloadMac) { mac.href = cfg.downloadMac; mac.textContent = 'Скачать для macOS'; mac.classList.remove('disabled'); }
+      var macArm = document.getElementById('dlMacArm'), macIntel = document.getElementById('dlMacIntel');
+      var macLinks = cfg.downloadMac || {};
+      if (macLinks.arm64) macArm.href = macLinks.arm64; else macArm.classList.add('disabled');
+      if (macLinks.amd64) macIntel.href = macLinks.amd64; else macIntel.classList.add('disabled');
 
       // Реферальная ссылка вида ...?ref=КОД: код запоминается на время визита (только в этом браузере):
       var refCode = "";
