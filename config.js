@@ -10,13 +10,13 @@ window.MY_APP = {
   referral: { inviterDays: 7, friendDays: 7, capDays: 90 },
 
   // Ссылки на скачивание. Файлы загружаются в хранилище Supabase (бакет "downloads") или на ваш хостинг.
-  downloadWindows: "https://github.com/zloyklaus/my-app-site/releases/download/v1.1.0/My_App_Setup_1.1.0.exe",
+  downloadWindows: "https://github.com/zloyklaus/my-app-site/releases/download/v1.2.0/My_App_Setup_1.2.0.exe",
   downloadMac: {
-    arm64: "https://github.com/zloyklaus/my-app-site/releases/download/v1.1.0/My_App_1.1.0_mac_arm64.dmg", // Apple Silicon (M1 и новее)
-    amd64: "https://github.com/zloyklaus/my-app-site/releases/download/v1.1.0/My_App_1.1.0_mac_amd64.dmg"  // Intel
+    arm64: "https://github.com/zloyklaus/my-app-site/releases/download/v1.2.0/My_App_1.2.0_mac_arm64.dmg", // Apple Silicon (M1 и новее)
+    amd64: "https://github.com/zloyklaus/my-app-site/releases/download/v1.2.0/My_App_1.2.0_mac_amd64.dmg"  // Intel
   },
 
-  version: "1.1.0",
+  version: "1.2.0",
   // Цены в рублях: запасные значения на случай, если сервер недоступен. Актуальные цены сайт берёт у функции pay
   // (таблица prices в базе), поэтому при смене цены править этот файл не обязательно.
   prices: { month: 799, half: 3830, year: 6710 },
