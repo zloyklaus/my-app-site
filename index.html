@@ -88,7 +88,10 @@
         <div class="extend" style="margin-bottom:22px">
           <p>E-mail для чека и кода лицензии:</p>
           <input id="email" type="email" placeholder="you@example.com" autocomplete="email" spellcheck="false">
-          <p style="font-size:14px;margin:10px 0 0"><label><input type="checkbox" id="consent"> Я согласен на передачу моего адреса e-mail в ЮKassa для отправки чека и на получение на него кода лицензии и принимаю <a href="privacy.html" target="_blank">политику конфиденциальности</a> и <a href="offer.html" target="_blank">оферту</a></label></p>
+          <div class="consent">
+            <label class="consent-row"><input type="checkbox" id="consent"> <span>Я согласен</span></label>
+            <p class="consent-text">на передачу моего адреса e-mail в ЮKassa для отправки чека и на получение на него кода лицензии; принимаю <a href="privacy.html" target="_blank">политику конфиденциальности</a> и <a href="offer.html" target="_blank">оферту</a>.</p>
+          </div>
         </div>
         <div class="extend">
           <p>Уже есть лицензия и хотите продлить её? Введите код сюда и нажмите «Купить» на нужном тарифе выше: срок прибавится к вашей лицензии. Поле само ничего не отправляет. Чтобы включить уже купленный код, введите его в программе (кнопка «Лицензия»).</p>
@@ -193,6 +196,12 @@
       }
 
       var msg = document.getElementById('buyMsg');
+      var consent = document.getElementById('consent'), consentRow = document.querySelector('.consent-row'), emailEl = document.getElementById('email');
+      var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      function markConsent(on) { consentRow.classList.toggle('required', on); }
+      consent.addEventListener('change', function () { if (consent.checked) markConsent(false); });
+      // Почта введена, а согласия нет: квадратик краснеет сразу, не дожидаясь нажатия «Купить»
+      emailEl.addEventListener('blur', function () { if (EMAIL_RE.test(emailEl.value.trim()) && !consent.checked) markConsent(true); });
       var toast = document.getElementById('toast'), toastTimer = null;
       function say(text, error, keep) {
         msg.textContent = text; msg.className = 'msg' + (error ? ' error' : '');
@@ -216,7 +225,7 @@
         var extend = document.getElementById('extendCode').value.trim();
         var email = document.getElementById("email").value.trim();
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { fail(document.getElementById("email"), "Укажите e-mail для кассового чека: на него придёт чек и код лицензии."); return; }
-        if (!document.getElementById("consent").checked) { fail(document.getElementById("consent").closest("label") || document.getElementById("consent"), "Поставьте галочку согласия с офертой и политикой конфиденциальности."); return; }
+        if (!consent.checked) { markConsent(true); fail(consentRow, "Поставьте галочку «Я согласен»: без согласия оплату создать нельзя."); return; }
         var body = { action: "create", plan: plan, email: email };
         if (extend) body.extend_code = extend;
         else if (refCode) body.ref = refCode;
