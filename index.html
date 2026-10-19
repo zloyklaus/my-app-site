@@ -94,6 +94,19 @@
             <p class="consent-text">на передачу моего адреса e-mail в ЮKassa для отправки чека и на получение на него кода лицензии; принимаю <a href="privacy.html" target="_blank">политику конфиденциальности</a> и <a href="offer.html" target="_blank">оферту</a>.</p>
           </div>
         </div>
+        <div class="extend promo-box" style="margin-bottom:22px">
+          <p>Есть промокод? Введите его и нажмите «Применить»: цены ниже пересчитаются или вы получите лицензию.</p>
+          <div class="promo-row">
+            <input id="promo" placeholder="Промокод" autocomplete="off" autocapitalize="characters" spellcheck="false">
+            <button class="btn ghost" id="promoBtn" type="button">Применить</button>
+          </div>
+          <div class="msg" id="promoMsg" role="status"></div>
+          <div class="promo-gift" id="promoGift" hidden>
+            <div class="code" id="promoGiftCode"></div>
+            <p><button class="btn" id="promoGiftCopy" type="button">Скопировать код</button></p>
+            <p class="notice" id="promoGiftNote"></p>
+          </div>
+        </div>
         <div class="extend">
           <p>Уже есть лицензия и хотите продлить её? Введите код сюда и нажмите «Купить» на нужном тарифе выше: срок прибавится к вашей лицензии. Поле само ничего не отправляет. Чтобы включить уже купленный код, введите его в программе (кнопка «Лицензия»).</p>
           <input id="extendCode" placeholder="MA-XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" spellcheck="false">
@@ -163,14 +176,26 @@
       if (cfg.downloadWindows) { winLink.href = cfg.downloadWindows; winTop.href = cfg.downloadWindows; }
       document.getElementById('ver').textContent = cfg.version;
       var base = cfg.prices.month;
-      Object.keys(cfg.prices).forEach(function (plan) {
-        var months = cfg.months[plan];
-        var total = cfg.prices[plan];
-        var per = Math.round(total / months);
-        var off = Math.round((1 - per / base) * 100);
-        var set = function (attr, value) { document.querySelectorAll("[data-" + attr + "=\"" + plan + "\"]").forEach(function (el) { el.textContent = value; }); };
-        set("price", total); set("per", per); set("off", off);
-      });
+      // Цены на карточках: без промокода — из config.js, с промокодом — со скидкой с сервера (старая цена зачёркивается)
+      function fmt(n) { return Number.isInteger(n) ? String(n) : n.toFixed(2).replace(".", ","); }
+      function renderPrices(prices) {
+        Object.keys(cfg.prices).forEach(function (plan) {
+          var months = cfg.months[plan];
+          var total = prices ? prices[plan] : cfg.prices[plan];
+          var per = Math.round(total / months);
+          var off = Math.round((1 - per / base) * 100);
+          var set = function (attr, value) { document.querySelectorAll("[data-" + attr + "=\"" + plan + "\"]").forEach(function (el) { el.textContent = value; }); };
+          set("price", fmt(total)); set("per", per); set("off", off);
+          document.querySelectorAll("[data-price=\"" + plan + "\"]").forEach(function (el) {
+            var amount = el.parentNode, old = amount.querySelector(".old-price");
+            if (prices && total !== cfg.prices[plan]) {
+              if (!old) { old = document.createElement("s"); old.className = "old-price"; amount.insertBefore(old, amount.firstChild); }
+              old.textContent = cfg.prices[plan] + " ₽";
+            } else if (old) { old.remove(); }
+          });
+        });
+      }
+      renderPrices(null);
       document.getElementById("refInv").textContent = ref.inviterDays;
       document.getElementById("refFr").textContent = ref.friendDays;
       document.getElementById('mail').href = 'mailto:' + cfg.supportEmail;
@@ -216,6 +241,87 @@
         el.addEventListener('input', function clear() { el.classList.remove('field-error'); el.removeEventListener('input', clear); });
       }
 
+      // ---- промокод ----
+      var promo = null; // применённый промокод: { code, kind, value, prices }
+      var promoEl = document.getElementById("promo"), promoBtn = document.getElementById("promoBtn"), promoMsg = document.getElementById("promoMsg");
+      var gift = document.getElementById("promoGift");
+      var PROMO_TEXTS = {
+        promo_not_found: "Такого промокода нет. Проверьте написание.",
+        promo_stopped: "Этот промокод больше не действует.",
+        promo_expired: "Срок действия промокода закончился.",
+        promo_exhausted: "Этот промокод уже израсходован.",
+        too_many: "Слишком много попыток. Подождите несколько минут.",
+        extend_code_not_found: "Код лицензии для продления не найден. Проверьте его.",
+        bad_extend_code: "Неверный формат кода лицензии для продления.",
+        license_revoked: "Эта лицензия отключена, продлить её нельзя.",
+        promo_is_free: "Этот промокод даёт бесплатную лицензию: нажмите «Получить лицензию»."
+      };
+      function promoSay(text, error) { promoMsg.textContent = text; promoMsg.className = "msg" + (error ? " error" : ""); }
+      function resetPromo() {
+        promo = null; gift.hidden = true; renderPrices(null);
+        promoBtn.textContent = "Применить"; promoBtn.dataset.mode = "";
+      }
+      promoEl.addEventListener("input", function () { if (promo || promoMsg.textContent) { resetPromo(); promoSay("", false); } });
+      promoEl.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); promoBtn.click(); } });
+
+      document.getElementById("promoGiftCopy").addEventListener("click", function () {
+        var self = this;
+        navigator.clipboard.writeText(document.getElementById("promoGiftCode").textContent).then(function () { self.textContent = "Скопировано"; });
+      });
+
+      function applyPromo() {
+        var code = promoEl.value.trim();
+        if (!code) { promoSay("Введите промокод.", true); return; }
+        if (promoBtn.classList.contains("loading")) return;
+        promoBtn.classList.add("loading");
+        fetch(cfg.payUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "promo", code: code }) })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+          .then(function (res) {
+            promoBtn.classList.remove("loading");
+            if (!res.ok || !res.data.kind) { promoSay(PROMO_TEXTS[res.data && res.data.error] || "Не удалось проверить промокод. Попробуйте позже.", true); return; }
+            promo = res.data;
+            if (promo.kind === "free") {
+              promoSay("Промокод принят: бесплатная лицензия на " + promo.value + " дн.", false);
+              promoBtn.textContent = "Получить лицензию"; promoBtn.dataset.mode = "free";
+              return;
+            }
+            renderPrices(promo.prices);
+            var what = promo.kind === "percent" ? "скидка " + promo.value + "%" : "скидка " + promo.value + " ₽";
+            promoSay("Промокод применён: " + what + "." + (refCode ? " Бонус за приглашение друга с промокодом не суммируется." : ""), false);
+          })
+          .catch(function () { promoBtn.classList.remove("loading"); promoSay("Нет связи с сервером. Проверьте интернет.", true); });
+      }
+
+      function redeemPromo() {
+        if (!promo || promoBtn.classList.contains("loading")) return;
+        var body = { action: "redeem", code: promo.code };
+        var extend = document.getElementById("extendCode").value.trim();
+        if (extend) body.extend_code = extend;
+        promoBtn.classList.add("loading");
+        fetch(cfg.payUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+          .then(function (res) {
+            promoBtn.classList.remove("loading");
+            if (!res.ok || !res.data.code) { promoSay(PROMO_TEXTS[res.data && res.data.error] || "Не удалось выдать лицензию. Попробуйте позже.", true); return; }
+            var until = res.data.expires.split("-").reverse().join(".");
+            promoSay(res.data.extended ? "Готово: лицензия продлена." : "Готово: ваша лицензия.", false);
+            document.getElementById("promoGiftCode").textContent = res.data.code;
+            document.getElementById("promoGiftCopy").textContent = "Скопировать код";
+            document.getElementById("promoGiftNote").textContent = "Действует до " + until + ". Сохраните код: повторно мы его показать не сможем. Введите его в программе: кнопка «Лицензия» → вставьте код → «Активировать».";
+            gift.hidden = false; promoBtn.dataset.mode = "done"; promoBtn.disabled = true;
+            gift.scrollIntoView({ behavior: "smooth", block: "center" });
+          })
+          .catch(function () { promoBtn.classList.remove("loading"); promoSay("Нет связи с сервером. Проверьте интернет.", true); });
+      }
+
+      promoBtn.addEventListener("click", function () { if (promoBtn.dataset.mode === "free") redeemPromo(); else applyPromo(); });
+      promoEl.addEventListener("input", function () { promoBtn.disabled = false; });
+      // Ссылка вида ...?promo=КОД подставляет и применяет промокод
+      try {
+        var fromUrlPromo = (new URLSearchParams(window.location.search).get("promo") || "").trim().slice(0, 40);
+        if (fromUrlPromo) { promoEl.value = fromUrlPromo; applyPromo(); }
+      } catch (e) {}
+
       function buy(plan, button) {
         if (button.classList.contains('loading')) return;
         var label = button.textContent;
@@ -226,7 +332,8 @@
         if (!consent.checked) { markConsent(true); fail(consentRow, "Пожалуйста, поставьте галочку «Я согласен»"); return; }
         var body = { action: "create", plan: plan, email: email };
         if (extend) body.extend_code = extend;
-        else if (refCode) body.ref = refCode;
+        else if (refCode && !promo) body.ref = refCode;
+        if (promo && promo.kind !== "free") body.promo = promo.code;
         button.classList.add('loading'); button.textContent = 'Оформляем…';
         say('Создаём платёж, сейчас откроется страница оплаты…');
         fetch(cfg.payUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
@@ -246,7 +353,8 @@
               bad_extend_code: 'Неверный формат кода для продления.',
               provider_error: 'Платёжная система временно недоступна, попробуйте позже.'
             };
-            say(texts[err] || 'Не удалось создать платёж. Попробуйте позже.', true);
+            if (PROMO_TEXTS[err] && err.indexOf('promo') === 0) { resetPromo(); promoSay(PROMO_TEXTS[err], true); }
+            say(texts[err] || PROMO_TEXTS[err] || 'Не удалось создать платёж. Попробуйте позже.', true);
           })
           .catch(function () { endLoading(); say('Нет связи с сервером. Проверьте интернет.', true); });
       }

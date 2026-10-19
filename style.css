@@ -160,3 +160,10 @@ footer a { color: var(--muted); }
 /* Сообщение прямо под полем почты: небольшое, без рамок; пустое — не занимает места */
 #buyMsg { margin: 8px auto 0; min-height: 0; font-size: 14px; max-width: 520px; }
 #buyMsg:empty { display: none; }
+
+/* Промокод: строка ввода, зачёркнутая старая цена, блок с выданным кодом */
+.promo-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; align-items: center; }
+.promo-row input { text-transform: uppercase; }
+.promo-gift { margin-top: 12px; }
+.promo-gift .notice { text-align: left; }
+.price .amount .old-price { display: block; font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: line-through; line-height: 1; margin-bottom: 2px; }
