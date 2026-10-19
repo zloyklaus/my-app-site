@@ -88,6 +88,7 @@
         <div class="extend" style="margin-bottom:22px">
           <p>E-mail для чека и кода лицензии:</p>
           <input id="email" type="email" placeholder="you@example.com" autocomplete="email" spellcheck="false">
+          <div class="msg" id="buyMsg" role="alert"></div>
           <div class="consent">
             <label class="consent-row"><input type="checkbox" id="consent"> <span>Я согласен</span></label>
             <p class="consent-text">на передачу моего адреса e-mail в ЮKassa для отправки чека и на получение на него кода лицензии; принимаю <a href="privacy.html" target="_blank">политику конфиденциальности</a> и <a href="offer.html" target="_blank">оферту</a>.</p>
@@ -97,7 +98,6 @@
           <p>Уже есть лицензия и хотите продлить её? Введите код сюда и нажмите «Купить» на нужном тарифе выше: срок прибавится к вашей лицензии. Поле само ничего не отправляет. Чтобы включить уже купленный код, введите его в программе (кнопка «Лицензия»).</p>
           <input id="extendCode" placeholder="MA-XXXXX-XXXXX-XXXXX-XXXXX" autocomplete="off" spellcheck="false">
         </div>
-        <div class="msg" id="buyMsg"></div>
         <p class="notice" style="text-align:center">Приведите друга: за каждого, кто оплатит лицензию по вашей ссылке, вы получите +<span id="refInv">7</span> дней, а друг — +<span id="refFr">7</span> дней.
           Свою ссылку и счётчик смотрите на странице <a href="bonus.html">«Мои бонусы»</a>.</p>
         <p class="notice">Оплата проходит на защищённой странице ЮKassa. После оплаты вы получите код лицензии на экране: сохраните его.
@@ -154,7 +154,6 @@
     </div>
   </footer>
 
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20261017a"></script>
   <script>
     (function () {
@@ -202,13 +201,12 @@
       consent.addEventListener('change', function () { if (consent.checked) markConsent(false); });
       // Почта введена, а согласия нет: квадратик краснеет сразу, не дожидаясь нажатия «Купить»
       emailEl.addEventListener('blur', function () { if (EMAIL_RE.test(emailEl.value.trim()) && !consent.checked) markConsent(true); });
-      var toast = document.getElementById('toast'), toastTimer = null;
-      function say(text, error, keep) {
+      function say(text, error) {
         msg.textContent = text; msg.className = 'msg' + (error ? ' error' : '');
-        toast.textContent = text; toast.className = 'toast show' + (error ? ' error' : '');
-        clearTimeout(toastTimer);
-        if (!keep) toastTimer = setTimeout(function () { toast.className = 'toast'; }, 6000);
       }
+      function clearMsg() { if (msg.classList.contains('error')) say('', false); }
+      emailEl.addEventListener('input', clearMsg);
+      consent.addEventListener('change', clearMsg);
       // Ошибка в поле: прокрутить к нему, подсветить, поставить курсор, показать подсказку
       function fail(el, text) {
         say(text, true);
@@ -224,13 +222,13 @@
         function endLoading() { button.classList.remove('loading'); button.textContent = label; }
         var extend = document.getElementById('extendCode').value.trim();
         var email = document.getElementById("email").value.trim();
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { fail(document.getElementById("email"), "Укажите e-mail для кассового чека: на него придёт чек и код лицензии."); return; }
-        if (!consent.checked) { markConsent(true); fail(consentRow, "Поставьте галочку «Я согласен»: без согласия оплату создать нельзя."); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { fail(document.getElementById("email"), "Пожалуйста, укажите e-mail: на него придёт чек и код лицензии"); return; }
+        if (!consent.checked) { markConsent(true); fail(consentRow, "Пожалуйста, поставьте галочку «Я согласен»"); return; }
         var body = { action: "create", plan: plan, email: email };
         if (extend) body.extend_code = extend;
         else if (refCode) body.ref = refCode;
         button.classList.add('loading'); button.textContent = 'Оформляем…';
-        say('Создаём платёж, сейчас откроется страница оплаты…', false, true);
+        say('Создаём платёж, сейчас откроется страница оплаты…');
         fetch(cfg.payUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
           .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
           .then(function (res) {
@@ -253,7 +251,7 @@
           .catch(function () { endLoading(); say('Нет связи с сервером. Проверьте интернет.', true); });
       }
 
-      window.addEventListener('pageshow', function () { document.querySelectorAll('.btn.loading').forEach(function (b) { b.classList.remove('loading'); }); toast.className = 'toast'; });
+      window.addEventListener('pageshow', function () { document.querySelectorAll('.btn.loading').forEach(function (b) { b.classList.remove('loading'); }); });
       [["buyMonth", "month"], ["buyHalf", "half"], ["buyYear", "year"]].forEach(function (pair) {
         document.getElementById(pair[0]).addEventListener("click", function () { buy(pair[1], this); });
       });

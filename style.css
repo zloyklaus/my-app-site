@@ -144,16 +144,7 @@ footer a { color: var(--muted); }
 .field-error { outline: 2px solid #dc2626; outline-offset: 3px; border-radius: 8px; animation: shake .38s; }
 @keyframes shake { 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
 
-/* Плашка с сообщением вверху экрана: видна при любой прокрутке */
-.toast {
-  position: fixed; left: 50%; top: 18px; z-index: 50; max-width: min(92vw, 560px);
-  transform: translate(-50%, -24px); opacity: 0; pointer-events: none;
-  padding: 13px 20px; border-radius: 12px; background: #1f2328; color: #fff; text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .3); transition: opacity .2s, transform .2s;
-}
-.toast.show { opacity: 1; transform: translate(-50%, 0); }
-.toast.error { background: #dc2626; }
-@media (prefers-reduced-motion: reduce) { .btn, .toast, .field-error, .btn.loading::before { animation: none; transition: none; } }
+@media (prefers-reduced-motion: reduce) { .btn, .field-error, .btn.loading::before { animation: none; transition: none; } }
 /* Согласие: отдельный квадратик «Я согласен», пояснение строкой ниже */
 .consent { margin: 14px auto 0; max-width: 580px; text-align: center; }
 .consent-row {
@@ -166,3 +157,6 @@ footer a { color: var(--muted); }
 .consent-row.required { border-color: #dc2626; background: rgba(220, 38, 38, .07); color: #dc2626; }
 .consent-row.required input[type="checkbox"] { accent-color: #dc2626; outline: 2px solid #dc2626; outline-offset: 1px; }
 .consent-text { font-size: 13px; margin: 8px 0 0; color: var(--muted); }
+/* Сообщение прямо под полем почты: небольшое, без рамок; пустое — не занимает места */
+#buyMsg { margin: 8px auto 0; min-height: 0; font-size: 14px; max-width: 520px; }
+#buyMsg:empty { display: none; }
