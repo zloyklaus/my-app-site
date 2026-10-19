@@ -151,6 +151,7 @@
     </div>
   </footer>
 
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20261017a"></script>
   <script>
     (function () {
@@ -192,27 +193,44 @@
       }
 
       var msg = document.getElementById('buyMsg');
-      function say(text, error) { msg.textContent = text; msg.className = 'msg' + (error ? ' error' : ''); }
+      var toast = document.getElementById('toast'), toastTimer = null;
+      function say(text, error, keep) {
+        msg.textContent = text; msg.className = 'msg' + (error ? ' error' : '');
+        toast.textContent = text; toast.className = 'toast show' + (error ? ' error' : '');
+        clearTimeout(toastTimer);
+        if (!keep) toastTimer = setTimeout(function () { toast.className = 'toast'; }, 6000);
+      }
+      // Ошибка в поле: прокрутить к нему, подсветить, поставить курсор, показать подсказку
+      function fail(el, text) {
+        say(text, true);
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
+        el.classList.remove('field-error'); void el.offsetWidth; el.classList.add('field-error');
+        el.addEventListener('input', function clear() { el.classList.remove('field-error'); el.removeEventListener('input', clear); });
+      }
 
       function buy(plan, button) {
+        if (button.classList.contains('loading')) return;
+        var label = button.textContent;
+        function endLoading() { button.classList.remove('loading'); button.textContent = label; }
         var extend = document.getElementById('extendCode').value.trim();
         var email = document.getElementById("email").value.trim();
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { say("Укажите e-mail для кассового чека.", true); return; }
-        if (!document.getElementById("consent").checked) { say("Подтвердите согласие с офертой и политикой конфиденциальности.", true); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { fail(document.getElementById("email"), "Укажите e-mail для кассового чека: на него придёт чек и код лицензии."); return; }
+        if (!document.getElementById("consent").checked) { fail(document.getElementById("consent").closest("label") || document.getElementById("consent"), "Поставьте галочку согласия с офертой и политикой конфиденциальности."); return; }
         var body = { action: "create", plan: plan, email: email };
         if (extend) body.extend_code = extend;
         else if (refCode) body.ref = refCode;
-        button.disabled = true;
-        say('Создаём платёж…');
+        button.classList.add('loading'); button.textContent = 'Оформляем…';
+        say('Создаём платёж, сейчас откроется страница оплаты…', false, true);
         fetch(cfg.payUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
           .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
           .then(function (res) {
-            button.disabled = false;
             if (res.ok && res.data.confirmation_url) {
               try { localStorage.setItem('my_app_last_payment', res.data.id); } catch (e) {}
               window.location.href = res.data.confirmation_url;
               return;
             }
+            endLoading();
             var err = (res.data && res.data.error) || 'unknown';
             var texts = {
               payments_not_configured: 'Оплата ещё не подключена. Напишите в поддержку.',
@@ -223,9 +241,10 @@
             };
             say(texts[err] || 'Не удалось создать платёж. Попробуйте позже.', true);
           })
-          .catch(function () { button.disabled = false; say('Нет связи с сервером. Проверьте интернет.', true); });
+          .catch(function () { endLoading(); say('Нет связи с сервером. Проверьте интернет.', true); });
       }
 
+      window.addEventListener('pageshow', function () { document.querySelectorAll('.btn.loading').forEach(function (b) { b.classList.remove('loading'); }); toast.className = 'toast'; });
       [["buyMonth", "month"], ["buyHalf", "half"], ["buyYear", "year"]].forEach(function (pair) {
         document.getElementById(pair[0]).addEventListener("click", function () { buy(pair[1], this); });
       });

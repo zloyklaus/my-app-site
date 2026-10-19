@@ -128,3 +128,29 @@ footer a { color: var(--muted); }
 /* кнопки тарифов на одной линии */
 .price { display: flex; flex-direction: column; align-items: center; }
 .price ul { flex: 1; align-self: stretch; }
+
+/* Отклик кнопок: нажатие, «Оформляем…» с крутилкой */
+.btn { transition: background .15s, transform .08s, box-shadow .15s; }
+.btn:active:not([disabled]):not(.disabled) { transform: scale(.95); box-shadow: inset 0 3px 8px rgba(0, 0, 0, .28); }
+.btn.loading { pointer-events: none; opacity: .9; cursor: progress; }
+.btn.loading::before {
+  content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 8px; vertical-align: -2px;
+  border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Ошибка в поле: красная рамка и встряска */
+.field-error { outline: 2px solid #dc2626; outline-offset: 3px; border-radius: 8px; animation: shake .38s; }
+@keyframes shake { 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+
+/* Плашка с сообщением вверху экрана: видна при любой прокрутке */
+.toast {
+  position: fixed; left: 50%; top: 18px; z-index: 50; max-width: min(92vw, 560px);
+  transform: translate(-50%, -24px); opacity: 0; pointer-events: none;
+  padding: 13px 20px; border-radius: 12px; background: #1f2328; color: #fff; text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .3); transition: opacity .2s, transform .2s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.error { background: #dc2626; }
+@media (prefers-reduced-motion: reduce) { .btn, .toast, .field-error, .btn.loading::before { animation: none; transition: none; } }
