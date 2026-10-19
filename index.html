@@ -63,23 +63,23 @@
           </div>
           <div class="card price">
             <h3>1 месяц</h3>
-            <div class="amount"><span data-price="month">699</span> ₽</div>
-            <div class="per">699 ₽ в месяц</div>
+            <div class="amount"><span data-price="month">799</span> ₽</div>
+            <div class="per"><span data-per="month">799</span> ₽ в месяц</div>
             <ul><li>без ограничений по числу приложений</li><li>до 2 устройств на один код</li></ul>
             <button class="btn ghost" id="buyMonth">Купить</button>
           </div>
           <div class="card price">
             <h3>6 месяцев</h3>
-            <div class="amount"><span data-price="half">3350</span> ₽</div>
-            <div class="per"><span data-per="half">558</span> ₽ в месяц · <b>−<span data-off="half">20</span>%</b></div>
+            <div class="amount"><span data-price="half">3830</span> ₽</div>
+            <div class="per"><span data-per="half">638</span> ₽ в месяц · <b>−<span data-off="half">20</span>%</b></div>
             <ul><li>всё из месячного тарифа</li><li>скидка 20% от месячной цены</li></ul>
             <button class="btn ghost" id="buyHalf">Купить</button>
           </div>
           <div class="card price best">
             <span class="badge">Выгоднее всего</span>
             <h3>1 год</h3>
-            <div class="amount"><span data-price="year">5890</span> ₽</div>
-            <div class="per"><span data-per="year">491</span> ₽ в месяц · <b>−<span data-off="year">30</span>%</b></div>
+            <div class="amount"><span data-price="year">6710</span> ₽</div>
+            <div class="per"><span data-per="year">559</span> ₽ в месяц · <b>−<span data-off="year">30</span>%</b></div>
             <ul><li>всё из месячного тарифа</li><li>максимальная скидка 30%</li></ul>
             <button class="btn" id="buyYear">Купить</button>
           </div>
@@ -175,27 +175,38 @@
       var winLink = document.getElementById('dlWin'), winTop = document.getElementById('dlWinTop');
       if (cfg.downloadWindows) { winLink.href = cfg.downloadWindows; winTop.href = cfg.downloadWindows; }
       document.getElementById('ver').textContent = cfg.version;
-      var base = cfg.prices.month;
+      // Базовые цены: запасные из config.js, затем актуальные с сервера (таблица prices)
+      var basePrices = {}; Object.keys(cfg.prices).forEach(function (k) { basePrices[k] = cfg.prices[k]; });
       // Цены на карточках: без промокода — из config.js, с промокодом — со скидкой с сервера (старая цена зачёркивается)
       function fmt(n) { return Number.isInteger(n) ? String(n) : n.toFixed(2).replace(".", ","); }
       function renderPrices(prices) {
         Object.keys(cfg.prices).forEach(function (plan) {
+          var base = basePrices.month;
           var months = cfg.months[plan];
-          var total = prices ? prices[plan] : cfg.prices[plan];
+          var total = prices ? prices[plan] : basePrices[plan];
           var per = Math.round(total / months);
           var off = Math.round((1 - per / base) * 100);
           var set = function (attr, value) { document.querySelectorAll("[data-" + attr + "=\"" + plan + "\"]").forEach(function (el) { el.textContent = value; }); };
           set("price", fmt(total)); set("per", per); set("off", off);
           document.querySelectorAll("[data-price=\"" + plan + "\"]").forEach(function (el) {
             var amount = el.parentNode, old = amount.querySelector(".old-price");
-            if (prices && total !== cfg.prices[plan]) {
+            if (prices && total !== basePrices[plan]) {
               if (!old) { old = document.createElement("s"); old.className = "old-price"; amount.insertBefore(old, amount.firstChild); }
-              old.textContent = cfg.prices[plan] + " ₽";
+              old.textContent = fmt(basePrices[plan]) + " ₽";
             } else if (old) { old.remove(); }
           });
         });
       }
       renderPrices(null);
+      // Актуальные цены с сервера (если не ответил — остаются запасные)
+      fetch(cfg.payUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "prices" }) })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d || !d.prices) return;
+          Object.keys(basePrices).forEach(function (k) { if (d.prices[k] > 0) basePrices[k] = d.prices[k]; });
+          renderPrices(typeof promo !== "undefined" && promo && promo.prices ? promo.prices : null);
+        })
+        .catch(function () {});
       document.getElementById("refInv").textContent = ref.inviterDays;
       document.getElementById("refFr").textContent = ref.friendDays;
       document.getElementById('mail').href = 'mailto:' + cfg.supportEmail;
