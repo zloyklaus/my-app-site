@@ -190,3 +190,10 @@ footer a { color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { .tile { animation: none; } }
 .steps li.key-step { border: 2px solid #ef4444; box-shadow: 0 0 0 4px rgba(239, 68, 68, .12); }
 @media (max-width: 1000px) { .tile:nth-child(1), .tile:nth-child(4) { display: none; } }
+
+/* значки с названиями приложений: текст вместо эмодзи */
+.tile { width: 84px; height: 84px; }
+.tile i { font-size: 24px; font-weight: 800; letter-spacing: -.5px; }
+.tile em { font-size: 9.5px; }
+@media (max-width: 1000px) { .tile:nth-child(1), .tile:nth-child(2) { display: none; } .tile:nth-child(3), .tile:nth-child(4) { display: flex; } }
+@media (max-width: 860px) { .tile { width: 58px; height: 58px; } .tile i { font-size: 17px; } }
