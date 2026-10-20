@@ -197,3 +197,5 @@ footer a { color: var(--muted); }
 .tile em { font-size: 9.5px; }
 @media (max-width: 1000px) { .tile:nth-child(1), .tile:nth-child(2) { display: none; } .tile:nth-child(3), .tile:nth-child(4) { display: flex; } }
 @media (max-width: 860px) { .tile { width: 58px; height: 58px; } .tile i { font-size: 17px; } }
+
+@media (max-width: 1000px) { .tile:nth-child(n+5) { display: none; } }
