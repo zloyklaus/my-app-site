@@ -167,3 +167,26 @@ footer a { color: var(--muted); }
 .promo-gift { margin-top: 12px; }
 .promo-gift .notice { text-align: left; }
 .price .amount .old-price { display: block; font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: line-through; line-height: 1; margin-bottom: 2px; }
+
+/* оформление главной: плавающие значки приложений и выделенный шаг */
+.hero { position: relative; overflow: hidden; }
+.hero .wrap { position: relative; z-index: 1; }
+.hero-note { max-width: 640px; margin: 16px auto 0; font-size: 14px; color: var(--muted); }
+.floaters { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.tile {
+  position: absolute; width: 74px; height: 74px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--g1), var(--g2)); color: #fff; box-shadow: 0 10px 24px rgba(30, 50, 110, .22);
+  animation: floaty 6s ease-in-out infinite; opacity: .92;
+}
+.tile i { font-style: normal; font-size: 30px; line-height: 1; }
+.tile em { font-style: normal; font-size: 11px; font-weight: 600; margin-top: 4px; letter-spacing: .2px; }
+.tile:nth-child(even) { animation-duration: 7.5s; transform: rotate(-6deg); }
+.tile:nth-child(odd) { transform: rotate(5deg); }
+@keyframes floaty { 0%, 100% { translate: 0 0; } 50% { translate: 0 -16px; } }
+@media (max-width: 860px) {
+  .tile { width: 52px; height: 52px; border-radius: 13px; opacity: .55; }
+  .tile i { font-size: 22px; } .tile em { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .tile { animation: none; } }
+.steps li.key-step { border: 2px solid #ef4444; box-shadow: 0 0 0 4px rgba(239, 68, 68, .12); }
+@media (max-width: 1000px) { .tile:nth-child(1), .tile:nth-child(4) { display: none; } }

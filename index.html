@@ -30,6 +30,7 @@
         <a href="#features">Возможности</a>
         <a href="#pricing">Тарифы</a>
         <a href="#download">Скачать</a>
+        <a href="guide.html">Инструкция</a>
         <a href="help.html">Помощь</a>
       </nav>
     </div>
@@ -37,6 +38,14 @@
 
   <main>
     <section class="hero">
+      <div class="floaters" aria-hidden="true">
+        <span class="tile" style="left:6%;top:14%;animation-delay:0s;--g1:#f97316;--g2:#ec4899"><i>📷</i><em>Фото</em></span>
+        <span class="tile" style="left:15%;top:58%;animation-delay:1.2s;--g1:#22c55e;--g2:#14b8a6"><i>💬</i><em>Чаты</em></span>
+        <span class="tile" style="left:3%;top:78%;animation-delay:.6s;--g1:#a855f7;--g2:#6366f1"><i>🎵</i><em>Музыка</em></span>
+        <span class="tile" style="left:88%;top:12%;animation-delay:.9s;--g1:#ef4444;--g2:#f97316"><i>🎬</i><em>Видео</em></span>
+        <span class="tile" style="left:80%;top:56%;animation-delay:1.8s;--g1:#0ea5e9;--g2:#2563eb"><i>🏦</i><em>Банки</em></span>
+        <span class="tile" style="left:91%;top:80%;animation-delay:.3s;--g1:#eab308;--g2:#f97316"><i>🎮</i><em>Игры</em></span>
+      </div>
       <div class="wrap">
         <h1>Приложения из вашего Apple ID —<br>в IPA и сразу на устройство</h1>
         <p class="lead">Скачивайте нужные версии приложений, храните IPA у себя и устанавливайте на iPhone и iPad в несколько кликов.</p>
@@ -45,6 +54,8 @@
           <a class="btn ghost" href="#pricing">Тарифы</a>
         </div>
         <small>Первое приложение можно скачать бесплатно, без регистрации.</small>
+        <p class="hero-note">Вернуть приложение, которого больше нет в App Store вашей страны, можно, если оно уже было на вашем Apple ID:
+          откройте «История покупок аккаунта». <a href="guide.html">Как это сделать, по шагам</a></p>
       </div>
     </section>
 
@@ -154,9 +165,12 @@
         <ol class="steps">
           <li>Скачайте и запустите установщик, выберите папку.</li>
           <li>Откройте My_App и войдите в свой Apple ID (пароль нужен только для входа и не сохраняется).</li>
+          <li class="key-step"><b>Выберите «История покупок аккаунта»</b> в списке слева над приложениями. Скачать можно только те приложения, которые
+            уже были загружены на ваш Apple ID (в том числе убранные из App Store в вашей стране). <a href="guide.html#step3">Показать на скриншоте</a></li>
           <li>Отметьте приложения и нажмите «Скачать»: первое — бесплатно.</li>
           <li>Для продолжения оплатите тариф, введите код в окне «Лицензия» — и пользуйтесь без ограничений.</li>
         </ol>
+        <p style="margin-top:18px;text-align:center"><a class="btn ghost" href="guide.html">Подробная инструкция со скриншотами</a></p>
         <p class="notice" style="margin-top:18px">Установщик пока не подписан цифровой подписью, поэтому Windows может показать предупреждение
           «Windows защитила ваш компьютер»: нажмите «Подробнее» → «Выполнить в любом случае».</p>
       </div>
@@ -185,6 +199,7 @@
   </footer>
 
   <script src="config.js?v=20261019c"></script>
+  <script src="stats.js?v=1" defer></script>
   <script>
     (function () {
       var cfg = window.MY_APP;

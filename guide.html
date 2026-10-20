@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Инструкция: My_App по шагам</title>
+  <meta name="description" content="Как скачать приложение из своего Apple ID и поставить его на iPhone: пошаговая инструкция со скриншотами.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="My_App">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="My_App: инструкция по шагам">
+  <meta property="og:description" content="Вход в Apple ID, история покупок, скачивание и установка на iPhone: по шагам и со скриншотами.">
+  <meta property="og:url" content="https://zloyklaus.github.io/my-app-site/guide.html">
+  <meta property="og:image" content="https://zloyklaus.github.io/my-app-site/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://zloyklaus.github.io/my-app-site/og-image.png">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <meta name="theme-color" content="#2f6fed">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .guide-step { margin: 0 0 40px; }
+    .guide-step h2 { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; }
+    .guide-step .num { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; }
+    .shot { position: relative; margin: 14px 0 6px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--card); box-shadow: 0 8px 24px rgba(20, 40, 90, .08); }
+    .shot img { display: block; width: 100%; height: auto; }
+    .mark-box { position: absolute; border: 3px solid #ef4444; border-radius: 10px; box-shadow: 0 0 0 4px rgba(239, 68, 68, .22); animation: pulse 1.8s ease-in-out infinite; pointer-events: none; }
+    .mark-label { position: absolute; background: #ef4444; color: #fff; font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 999px; white-space: nowrap; pointer-events: none; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 3px rgba(239, 68, 68, .22); } 50% { box-shadow: 0 0 0 9px rgba(239, 68, 68, .08); } }
+    @media (prefers-reduced-motion: reduce) { .mark-box { animation: none; } }
+    .important { border-left: 4px solid #ef4444; background: var(--card); border-radius: 12px; padding: 14px 18px; margin: 14px 0; }
+    .important b { color: #ef4444; }
+    .caption { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
+    @media (max-width: 560px) { .mark-label { font-size: 11px; padding: 2px 7px; } }
+  </style>
+</head>
+<body>
+  <header class="top"><div class="wrap"><a class="logo" href="index.html"><span class="mark">⬇</span> My_App</a></div></header>
+  <main class="wrap doc">
+
+    <h1>Инструкция по шагам</h1>
+    <p>Пять шагов от запуска до приложения на iPhone. Красные рамки на скриншотах показывают, куда нажимать.</p>
+
+    <div class="important">
+      <p><b>Важно.</b> Скачать можно только те приложения, которые уже были загружены на ваш Apple ID, в том числе те, которые потом убрали из App Store
+        в вашей стране. Они лежат в списке <b>«История покупок аккаунта»</b> (шаг 3). Приложение, которого никогда не было в вашем аккаунте, программа не скачает.</p>
+    </div>
+
+    <section class="guide-step" id="step1">
+      <h2><span class="num">1</span> Установите и откройте My_App</h2>
+      <p>Скачайте программу на <a href="index.html#download">главной странице</a> и запустите. На Windows запустите установщик, на Mac откройте файл .dmg и перетащите
+        My_App в «Программы» (как открыть программу без подписи Apple, написано в <a href="help.html#mac">помощи</a>).</p>
+      <p>Нажмите <b>«Войти»</b> в правом верхнем углу окна.</p>
+      <div class="shot">
+        <img src="img/guide/g1_main.png" alt="Главное окно My_App, кнопка «Войти» в правом верхнем углу" width="980" height="640" loading="lazy">
+        <span class="mark-box" style="left:90.8%;top:2.6%;width:7.6%;height:5.8%"></span>
+        <span class="mark-label" style="left:74%;top:9.4%">Нажмите «Войти»</span>
+      </div>
+    </section>
+
+    <section class="guide-step" id="step2">
+      <h2><span class="num">2</span> Войдите в свой Apple ID</h2>
+      <p>Введите Apple ID (e-mail) и пароль, нажмите <b>«Войти»</b>. Если включена двухфакторная проверка, Apple пришлёт код на ваше устройство: введите его
+        на следующем шаге. Пароль нигде не сохраняется и передаётся только Apple.</p>
+      <div class="shot">
+        <img src="img/guide/g2_login.png" alt="Окно входа в аккаунт Apple: поля Apple ID и пароль, кнопка «Войти»" width="980" height="640" loading="lazy">
+        <span class="mark-box" style="left:30.3%;top:35.6%;width:39.6%;height:6.4%"></span>
+        <span class="mark-box" style="left:30.3%;top:46.5%;width:39.6%;height:6.4%"></span>
+        <span class="mark-box" style="left:30.3%;top:67.8%;width:13.4%;height:6.4%"></span>
+        <span class="mark-label" style="left:46%;top:69%">Затем «Войти»</span>
+      </div>
+    </section>
+
+    <section class="guide-step" id="step3">
+      <h2><span class="num">3</span> Выберите «История покупок аккаунта»</h2>
+      <p>Слева над списком откройте выпадающий список и выберите <b>«История покупок аккаунта»</b>. Программа загрузит все приложения, которые вы когда-либо
+        скачивали на этот Apple ID: с названием, номером и датой. Если у вас много покупок, загрузка займёт минуту.</p>
+      <div class="important">
+        <p><b>Именно эти приложения можно скачать.</b> Список «Популярные приложения» нужен только для быстрого поиска по названию.</p>
+      </div>
+      <div class="shot">
+        <img src="img/guide/g3_history.png" alt="Выбрана «История покупок аккаунта»: список приложений с датами покупки" width="980" height="640" loading="lazy">
+        <span class="mark-box" style="left:1.6%;top:9.8%;width:24.2%;height:5.6%"></span>
+        <span class="mark-label" style="left:27%;top:10.6%">Выберите «История покупок аккаунта»</span>
+      </div>
+      <p class="caption">Нужное приложение можно найти строкой поиска справа: по названию или номеру.</p>
+    </section>
+
+    <section class="guide-step" id="step4">
+      <h2><span class="num">4</span> Отметьте приложения и нажмите «Скачать»</h2>
+      <p>Поставьте галочки у нужных приложений (можно несколько сразу) и нажмите <b>«Скачать»</b>. Нужна не последняя версия? Нажмите «Выбрать версию».
+        Готовые файлы .ipa лягут в папку Apps, её открывает кнопка «Папка Apps».</p>
+      <div class="shot">
+        <img src="img/guide/g4_selected.png" alt="Отмечены два приложения, кнопка «Скачать (2)» активна" width="980" height="640" loading="lazy">
+        <span class="mark-box" style="left:2.4%;top:24%;width:3.4%;height:10.8%"></span>
+        <span class="mark-box" style="left:85.5%;top:81.4%;width:12.6%;height:6.8%"></span>
+        <span class="mark-label" style="left:61%;top:90%">Затем «Скачать»</span>
+      </div>
+    </section>
+
+    <section class="guide-step" id="step5">
+      <h2><span class="num">5</span> Поставьте приложение на iPhone</h2>
+      <p>Подключите iPhone кабелем, разблокируйте и нажмите «Доверять этому компьютеру». В My_App нажмите <b>«На устройство»</b>. В окне отметьте
+        свой iPhone и нужный файл и нажмите <b>«Установить»</b>. На Windows для связи с iPhone нужен драйвер Apple: программа сама подскажет, если его нет.</p>
+      <div class="shot">
+        <img src="img/guide/g5_install.png" alt="Окно установки на устройство: список устройств и файлов, кнопка «Установить»" width="980" height="640" loading="lazy">
+        <span class="mark-box" style="left:17.4%;top:27.2%;width:2.8%;height:5.9%"></span>
+        <span class="mark-box" style="left:17.4%;top:49.6%;width:2.8%;height:5.9%"></span>
+        <span class="mark-box" style="left:16.8%;top:85.2%;width:10.7%;height:6.4%"></span>
+        <span class="mark-label" style="left:28.5%;top:86.4%">Отметьте iPhone и файл, затем «Установить»</span>
+      </div>
+    </section>
+
+    <h2>Что-то не получилось?</h2>
+    <p>Ответы на частые вопросы собраны на странице <a href="help.html">«Помощь»</a>. Если не нашли свой случай, напишите в поддержку:
+      <a id="mail" href="#">адрес поддержки</a>, приложите скриншот.</p>
+    <p><a class="btn" href="index.html#download">Скачать программу</a></p>
+  </main>
+  <footer><div class="wrap">
+      <p>ИП Злобина Татьяна Евгеньевна · ИНН 860414423064 · ОГРНИП 325861700014187 · <a href="mailto:my_app@internet.ru">my_app@internet.ru</a></p><a href="index.html">На главную</a></div></footer>
+  <script src="config.js?v=20261019c"></script>
+  <script src="stats.js?v=1" defer></script>
+  <script>
+    var a = document.getElementById('mail');
+    a.href = 'mailto:' + window.MY_APP.supportEmail;
+    a.textContent = window.MY_APP.supportEmail;
+  </script>
+</body>
+</html>
