@@ -22,7 +22,7 @@
       (далее — «Программа») на срок оплаченного тарифа на условиях этой оферты. Оплата тарифа означает акцепт оферты.</p>
 
     <h2>2. Тарифы и порядок оплаты</h2>
-    <p>Лицензия на 1 месяц — 599 ₽, на 6 месяцев — 2870 ₽, на 1 год — 5030 ₽. НДС не облагается. Оплата производится на странице платёжной системы ЮKassa.
+    <p>Лицензия на 1 месяц — <span data-price="month">599</span> ₽, на 6 месяцев — <span data-price="half">2870</span> ₽, на 1 год — <span data-price="year">5030</span> ₽. НДС не облагается. Оплата производится на странице платёжной системы ЮKassa.
       После успешной оплаты на странице сайта отображается код лицензии, который вводится в Программе. Срок лицензии отсчитывается
       с момента оплаты: 1 месяц — 31 день, 6 месяцев — 183 дня, 1 год — 366 дней. Продление: оплатой нового периода с указанием действующего кода.
       Один код можно активировать на 2 устройствах.</p>
@@ -62,5 +62,23 @@
   </main>
   <footer><div class="wrap">
       <p>ИП Злобина Татьяна Евгеньевна · ИНН 860414423064 · ОГРНИП 325861700014187 · <a href="mailto:my_app@internet.ru">my_app@internet.ru</a></p><a href="index.html">На главную</a></div></footer>
+  <script src="config.js?v=20261021a"></script>
+  <script>
+    // Цены в тексте берутся с сервера (те же, что на главной и в боте); если сервер недоступен, остаются записанные в тексте
+    (function () {
+      var cfg = window.MY_APP || {};
+      if (!cfg.payUrl) return;
+      fetch(cfg.payUrl, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action: "prices" }) })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d || !d.prices) return;
+          document.querySelectorAll("[data-price]").forEach(function (el) {
+            var v = d.prices[el.getAttribute("data-price")];
+            if (v > 0) el.textContent = String(v);
+          });
+        })
+        .catch(function () {});
+    })();
+  </script>
 </body>
 </html>
