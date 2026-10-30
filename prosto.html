@@ -66,7 +66,7 @@
     <a class="btn off" id="dl" href="#">Скоро будет готово</a>
 
     <ol>
-      <li>Жамкни <b>«Скачать»</b> и подожди</li>
+      <li>Жамкни <b>«Скачать для Windows»</b> и подожди</li>
       <li>Тыкни два раза в файл и жми <b>«Далее»</b></li>
       <li>Войди под своим <b>Apple ID</b><br>Ты почти у цели!</li>
       <li>Подключи айфон проводом и клацни <b>«Поставить»</b></li>
@@ -89,7 +89,7 @@
     (function () {
       var c = window.MY_APP || {};
       var dl = document.getElementById('dl');
-      if (c.downloadSkachun) { dl.href = c.downloadSkachun; dl.textContent = 'Скачать'; dl.className = 'btn'; }
+      if (c.downloadSkachun) { dl.href = c.downloadSkachun; dl.textContent = 'Скачать для Windows'; dl.className = 'btn'; }
       var mail = document.getElementById('mail');
       if (c.supportEmail) { mail.href = 'mailto:' + c.supportEmail; }
       var price = (c.prices && c.prices.month) || 599;
