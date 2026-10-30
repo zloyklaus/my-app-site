@@ -16,6 +16,8 @@ window.MY_APP = {
     amd64: "https://github.com/zloyklaus/my-app-site/releases/download/v1.3.7/My_App_1.3.7_mac_amd64.dmg"  // Intel
   },
 
+  downloadSkachun: "https://github.com/zloyklaus/my-app-site/releases/download/skachun-1.5.0/Skachun.exe",
+
   version: "1.4.0",
   // Цены в рублях: запасные значения на случай, если сервер недоступен. Актуальные цены сайт берёт у функции pay
   // (таблица prices в базе), поэтому при смене цены править этот файл не обязательно.
