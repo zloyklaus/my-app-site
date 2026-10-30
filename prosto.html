@@ -35,6 +35,17 @@
     ol li::before { content: counter(s); display: block; width: 56px; height: 56px; margin: 0 auto 6px; border-radius: 50%; background: #ffd84d; border: 4px solid #2b2b2b;
                     font-weight: 800; font-size: 28px; line-height: 48px; }
     ol b { background: #ffeea0; padding: 0 6px; border-radius: 6px; }
+    .buy { margin-top: 14px; text-align: left; font-size: 16px; }
+    .buy input[type=email] { width: 100%; padding: 14px 16px; font-size: 18px; border: 4px solid #2b2b2b; border-radius: 16px; background: #fff; font-family: inherit; }
+    .buy input[type=email].bad { border-color: #b3261e; }
+    .consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 10px; color: #4a4435; line-height: 1.3; }
+    .consent input { width: 22px; height: 22px; flex: none; margin-top: 2px; }
+    .consent.bad span { color: #b3261e; }
+    .consent a { color: #4a4435; }
+    .msg { min-height: 20px; margin-top: 8px; text-align: center; color: #4a4435; }
+    .msg.error { color: #b3261e; font-weight: 700; }
+    .buybtn { margin-top: 8px; font-size: 24px; padding: 18px 28px; text-align: center; }
+    .buybtn.loading { opacity: .6; pointer-events: none; }
     .done { font-size: 28px; font-weight: 800; margin: 8px 0 40px; }
     .foot { font-size: 16px; color: #6b6150; }
     .foot a { color: #6b6150; }
@@ -58,13 +69,21 @@
       <li>Тыкни два раза в файл и жми <b>«Далее»</b></li>
       <li>Войди под своим <b>Apple ID</b><br>Ты почти у цели!</li>
       <li>Подключи айфон проводом и клацни <b>«Поставить»</b></li>
+      <li>Первое приложение бесплатно. Дальше нужна <b>лицензия</b>
+        <div class="buy">
+          <input id="email" type="email" placeholder="Твоя почта: туда придёт чек и код" autocomplete="email" spellcheck="false">
+          <label class="consent"><input type="checkbox" id="consent"> <span>Согласен на передачу почты в ЮKassa для чека и получение кода; принимаю <a href="privacy.html" target="_blank">политику конфиденциальности</a> и <a href="offer.html" target="_blank">оферту</a></span></label>
+          <div class="msg" id="buyMsg" role="alert"></div>
+          <a class="btn buybtn" id="buy" href="#">Купить лицензию на месяц: <span id="price">599</span>&nbsp;₽</a>
+        </div>
+      </li>
     </ol>
     <p class="done">Готово! Ты моя бусинка</p>
 
     <p class="foot">Не вышло? Напиши: <a id="mail" href="#">поддержка</a> &middot; <a href="pro.html">My_App pro версия</a></p>
   </div>
 
-  <script src="config.js?v=20261030a"></script>
+  <script src="config.js?v=20261030b"></script>
   <script>
     (function () {
       var c = window.MY_APP || {};
@@ -72,6 +91,34 @@
       if (c.downloadSkachun) { dl.href = c.downloadSkachun; dl.textContent = 'Скачать'; dl.className = 'btn'; }
       var mail = document.getElementById('mail');
       if (c.supportEmail) { mail.href = 'mailto:' + c.supportEmail; }
+      var price = (c.prices && c.prices.month) || 599;
+      document.getElementById('price').textContent = price;
+      var emailEl = document.getElementById('email'), consent = document.getElementById('consent'), msg = document.getElementById('buyMsg'), buy = document.getElementById('buy');
+      function say(t, err) { msg.textContent = t; msg.className = 'msg' + (err ? ' error' : ''); }
+      emailEl.addEventListener('input', function () { emailEl.classList.remove('bad'); say('', false); });
+      consent.addEventListener('change', function () { consent.parentNode.classList.remove('bad'); say('', false); });
+      buy.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (buy.classList.contains('loading')) return;
+        var email = emailEl.value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { emailEl.classList.add('bad'); emailEl.focus(); say('Напиши почту: на неё придёт чек и код лицензии', true); return; }
+        if (!consent.checked) { consent.parentNode.classList.add('bad'); say('Поставь галочку «Согласен»', true); return; }
+        var label = buy.innerHTML;
+        buy.classList.add('loading'); buy.textContent = 'Открываю оплату…'; say('Создаю платёж, сейчас откроется страница оплаты…', false);
+        function stop(t) { buy.classList.remove('loading'); buy.innerHTML = label; say(t, true); }
+        fetch(c.payUrl, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'create', plan: 'month', email: email }) })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+          .then(function (res) {
+            if (res.ok && res.data.confirmation_url) {
+              try { localStorage.setItem('my_app_last_payment', res.data.id); } catch (x) {}
+              window.location.href = res.data.confirmation_url; return;
+            }
+            var err = (res.data && res.data.error) || '';
+            stop(err === 'bad_email' ? 'Проверь адрес почты.' : err === 'payments_not_configured' ? 'Оплата пока не подключена. Напиши в поддержку.' : 'Не получилось создать платёж. Попробуй позже.');
+          })
+          .catch(function () { stop('Нет связи с сервером. Проверь интернет.'); });
+      });
+      window.addEventListener('pageshow', function () { buy.classList.remove('loading'); });
       var tips = [
         'Установить можно только приложения, которые вы раньше скачивали под своим Apple ID.',
         'Не скачивали нужное приложение? Попросите учётную запись друга.',
