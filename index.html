@@ -48,5 +48,11 @@
       </div>
     </div>
   </div>
+  <script>
+    // Старые ссылки (из программы и приглашения друзей) вели на главную: тарифы и ?ref= теперь на pro.html
+    if (location.hash === '#pricing' || /[?&]ref=/.test(location.search) || /[?&]promo=/.test(location.search)) {
+      location.replace('pro.html' + location.search + location.hash);
+    }
+  </script>
 </body>
 </html>

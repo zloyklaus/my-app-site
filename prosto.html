@@ -35,6 +35,7 @@
     ol li::before { content: counter(s); display: block; width: 56px; height: 56px; margin: 0 auto 6px; border-radius: 50%; background: #ffd84d; border: 4px solid #2b2b2b;
                     font-weight: 800; font-size: 28px; line-height: 48px; }
     ol b { background: #ffeea0; padding: 0 6px; border-radius: 6px; }
+    #buy-license { scroll-margin-top: 20px; }
     .buy { margin-top: 14px; text-align: left; font-size: 16px; }
     .buy input[type=email] { width: 100%; padding: 14px 16px; font-size: 18px; border: 4px solid #2b2b2b; border-radius: 16px; background: #fff; font-family: inherit; }
     .buy input[type=email].bad { border-color: #b3261e; }
@@ -69,7 +70,7 @@
       <li>Тыкни два раза в файл и жми <b>«Далее»</b></li>
       <li>Войди под своим <b>Apple ID</b><br>Ты почти у цели!</li>
       <li>Подключи айфон проводом и клацни <b>«Поставить»</b></li>
-      <li>Первое приложение бесплатно. Дальше нужна <b>лицензия</b>
+      <li id="buy-license">Первое приложение бесплатно. Дальше нужна <b>лицензия</b>
         <div class="buy">
           <input id="email" type="email" placeholder="Твоя почта: туда придёт чек и код" autocomplete="email" spellcheck="false">
           <label class="consent"><input type="checkbox" id="consent"> <span>Согласен на передачу почты в ЮKassa для чека и получение кода; принимаю <a href="privacy.html" target="_blank">политику конфиденциальности</a> и <a href="offer.html" target="_blank">оферту</a></span></label>
@@ -78,7 +79,7 @@
         </div>
       </li>
     </ol>
-    <p class="done">Готово! Ты моя бусинка</p>
+    <p class="done">Готово! Ты ж моя бусинка</p>
 
     <p class="foot">Не вышло? Напиши: <a id="mail" href="#">поддержка</a> &middot; <a href="pro.html">My_App pro версия</a></p>
   </div>
