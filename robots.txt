@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://zloyklaus.github.io/my-app-site/sitemap.xml
