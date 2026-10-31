@@ -48,10 +48,23 @@
     .about details[open] summary::after { content: "−"; }
     .about details p { margin: 10px 0 2px; }
     @media (max-width: 520px) { .about { margin: 48px 16px 36px; padding: 22px 16px 16px; } }
+    /* экран пополам: слева фон «про» версии, справа — простой */
+    .floaters { display: none; }
+    @media (min-width: 761px) {
+      body { background: linear-gradient(90deg, #f6f8fc 50%, #fff4d6 50%); }
+      .floaters { display: block; position: fixed; left: 0; top: 0; width: 50%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; }
+      .tile { position: absolute; width: 74px; height: 74px; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 24px rgba(30, 50, 110, .22); animation: floaty 6s ease-in-out infinite; opacity: .92; }
+      .tile img { width: 100%; height: 100%; display: block; }
+      .tile:nth-child(even) { animation-duration: 7.5s; transform: rotate(-6deg); }
+      .tile:nth-child(odd) { transform: rotate(5deg); }
+    }
+    @keyframes floaty { 0%, 100% { translate: 0 0; } 50% { translate: 0 -16px; } }
+    @media (prefers-reduced-motion: reduce) { .tile { animation: none; } }
   </style>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "name": "My_App", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Windows 10, Windows 11", "inLanguage": "ru", "url": "https://zloyklaus.github.io/my-app-site/", "description": "Скачивает приложения из вашей истории покупок Apple ID, в том числе удалённые из App Store, и ставит их на iPhone и iPad."}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Как скачать удалённое приложение на iPhone?", "acceptedAnswer": {"@type": "Answer", "text": "Если вы когда-то скачивали приложение под своим Apple ID, оно остаётся в вашей истории покупок, даже если его убрали из App Store. My_App и «Скачун» находят его там, скачивают файл и ставят на iPhone через компьютер."}}, {"@type": "Question", "name": "Как установить приложение, которого нет в App Store?", "acceptedAnswer": {"@type": "Answer", "text": "Подключите iPhone к компьютеру проводом, войдите в программе под своим Apple ID, отметьте нужное приложение и нажмите «Поставить». Работает только с приложениями, которые уже были скачаны под вашим Apple ID."}}, {"@type": "Question", "name": "Это безопасно?", "acceptedAnswer": {"@type": "Answer", "text": "Установка идёт через ваш компьютер под вашим Apple ID, без сторонних магазинов приложений."}}, {"@type": "Question", "name": "Сколько это стоит?", "acceptedAnswer": {"@type": "Answer", "text": "Первое приложение ставится бесплатно. Дальше нужна лицензия, тарифы указаны на странице для опытных пользователей."}}, {"@type": "Question", "name": "Для каких систем?", "acceptedAnswer": {"@type": "Answer", "text": "Для Windows 10 и 11 (программа и «Скачун»), для Mac есть консольная версия."}}]}]}</script>
 </head>
 <body>
+  <div class="floaters" aria-hidden="true"><span class="tile" style="left:6%;top:12%;animation-delay:0.0s"><img src="img/apps/ok.png" alt="" width="256" height="256"></span><span class="tile" style="left:30%;top:8%;animation-delay:0.4s"><img src="img/apps/max.png" alt="" width="256" height="256"></span><span class="tile" style="left:4%;top:40%;animation-delay:0.8s"><img src="img/apps/alfa.png" alt="" width="256" height="256"></span><span class="tile" style="left:33%;top:34%;animation-delay:1.2s"><img src="img/apps/sber.png" alt="" width="256" height="256"></span><span class="tile" style="left:8%;top:66%;animation-delay:1.6s"><img src="img/apps/avito.png" alt="" width="256" height="256"></span><span class="tile" style="left:5%;top:90%;animation-delay:2.0s"><img src="img/apps/tbank.png" alt="" width="256" height="256"></span><span class="tile" style="left:17%;top:76%;animation-delay:2.4s"><img src="img/apps/mail.png" alt="" width="256" height="256"></span></div>
   <h1>Как вам удобнее?</h1>
   <p class="sub">Программа одна, версии сайта две. Выберите свою.</p>
   <div class="choices">
