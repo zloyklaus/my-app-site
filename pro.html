@@ -91,7 +91,7 @@
           </div>
           <div class="card price">
             <h3>1 месяц</h3>
-            <div class="amount"><span data-price="month">599</span> ₽</div>
+            <div class="amount"><span data-price="month">699</span> ₽</div>
             <div class="per"><span data-per="month">599</span> ₽ в месяц</div>
             <ul><li>без ограничений по числу приложений</li><li>1 устройство на один код</li></ul>
             <button class="btn ghost" id="buyMonth">Купить</button>
@@ -204,7 +204,7 @@
     </div>
   </footer>
 
-  <script src="config.js?v=20261109-fixed"></script>
+  <script src="config.js?v=price699-20261117"></script>
   <script src="stats.js?v=1" defer></script>
   <script>
     (function () {
@@ -213,9 +213,9 @@
       var winLink = document.getElementById('dlWin'), winTop = document.getElementById('dlWinTop');
       if (cfg.downloadWindows) { winLink.href = cfg.downloadWindows; winTop.href = cfg.downloadWindows; }
       document.getElementById('ver').textContent = cfg.version;
-      // Базовые цены: запасные из config.js, затем актуальные с сервера (таблица prices)
+      // Базовые цены: запасные из config.js?v=price699-20261117, затем актуальные с сервера (таблица prices)
       var basePrices = {}; Object.keys(cfg.prices).forEach(function (k) { basePrices[k] = cfg.prices[k]; });
-      // Цены на карточках: без промокода — из config.js, с промокодом — со скидкой с сервера (старая цена зачёркивается)
+      // Цены на карточках: без промокода — из config.js?v=price699-20261117, с промокодом — со скидкой с сервера (старая цена зачёркивается)
       function fmt(n) { return Number.isInteger(n) ? String(n) : n.toFixed(2).replace(".", ","); }
       function renderPrices(prices) {
         Object.keys(cfg.prices).forEach(function (plan) {
